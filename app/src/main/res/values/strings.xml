@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Lucky Charm</string>
+    <string name="subtitle">Pick a charm and hang it from the top of your screen.</string>
+    <string name="status_permission_needed">Lucky Charm needs the \"Display over other apps\" permission to hang your charm.</string>
+    <string name="status_permission_granted">All set — pick a charm below.</string>
+    <string name="grant_permission">Grant overlay permission</string>
+    <string name="hang_charm">Hang it up</string>
+    <string name="hide_charm">Take it down</string>
+</resources>
