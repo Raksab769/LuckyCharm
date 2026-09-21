@@ -5,6 +5,8 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Path
 import android.graphics.RectF
+import android.graphics.drawable.Drawable
+import androidx.annotation.DrawableRes
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -14,7 +16,11 @@ import kotlin.math.sin
  * ladybird, heart) rather than reproductions of any specific existing
  * product or cultural artifact's exact artwork.
  */
-enum class CharmType(val displayName: String, val baseColor: Int) {
+enum class CharmType(
+    val displayName: String,
+    val baseColor: Int,
+    @DrawableRes val drawableRes: Int? = null
+) {
     CLOVER("Four-Leaf Clover", Color.parseColor("#3FA34D")),
     STAR("Wishing Star", Color.parseColor("#F5B301")),
     HORSESHOE("Horseshoe", Color.parseColor("#C9962C")),
@@ -23,12 +29,29 @@ enum class CharmType(val displayName: String, val baseColor: Int) {
     LOVE("Love Dangle", Color.parseColor("#E0457B")),
     PUBG_HELMET("Level 3 Helmet", Color.parseColor("#4B5320")),
     PUBG_PAN("Winner Pan", Color.parseColor("#2C2C2C")),
-    ALPHABET("Alphabet Letter", Color.parseColor("#E9C46A"));
-
+    ALPHABET("Alphabet Letter", Color.parseColor("#E9C46A")),
+    PHOTO_1("Photo Charm 1", Color.parseColor("#8E44AD"), R.drawable.istockphoto_1005374612_612x612),
+    PHOTO_2("Photo Charm 2", Color.parseColor("#2980B9"), R.drawable.istockphoto_1339851357_612x612);
     /** Draw the charm centered at (cx, cy) with the given radius. [ritual] is 0..1 progress of the tap animation. */
-    fun draw(canvas: Canvas, paint: Paint, cx: Float, cy: Float, radius: Float, ritual: Float, customColor: Int? = null, letter: String? = null) {
+    fun draw(
+        canvas: Canvas,
+        paint: Paint,
+        cx: Float,
+        cy: Float,
+        radius: Float,
+        ritual: Float,
+        customColor: Int? = null,
+        letter: String? = null,
+        customDrawable: Drawable? = null
+    ) {
         paint.style = Paint.Style.FILL
         paint.color = customColor ?: baseColor
+
+        if (customDrawable != null) {
+            drawPhoto(canvas, paint, cx, cy, radius, ritual, customDrawable)
+            return
+        }
+
         when (this) {
             CLOVER -> drawClover(canvas, paint, cx, cy, radius, ritual, customColor)
             STAR -> drawStar(canvas, paint, cx, cy, radius, ritual, customColor)
@@ -39,7 +62,53 @@ enum class CharmType(val displayName: String, val baseColor: Int) {
             PUBG_HELMET -> drawPubgHelmet(canvas, paint, cx, cy, radius, ritual, customColor)
             PUBG_PAN -> drawPubgPan(canvas, paint, cx, cy, radius, ritual, customColor)
             ALPHABET -> drawAlphabet(canvas, paint, cx, cy, radius, ritual, customColor, letter)
+            else -> canvas.drawCircle(cx, cy, radius, paint)
         }
+    }
+
+    private fun drawPhoto(
+        canvas: Canvas,
+        paint: Paint,
+        cx: Float,
+        cy: Float,
+        radius: Float,
+        ritual: Float,
+        drawable: Drawable
+    ) {
+        val spin = ritual * 2f * Math.PI.toFloat()
+        canvas.save()
+        canvas.rotate(Math.toDegrees(spin.toDouble()).toFloat(), cx, cy)
+
+        // Top bail ring to attach to the string
+        paint.style = Paint.Style.STROKE
+        paint.strokeWidth = radius * 0.12f
+        paint.color = Color.parseColor("#C9962C")
+        canvas.drawCircle(cx, cy - radius * 0.85f, radius * 0.2f, paint)
+
+        // Clip path to round the photo into a smooth circular amulet
+        canvas.save()
+        val clipPath = Path().apply {
+            addCircle(cx, cy, radius * 0.95f, Path.Direction.CW)
+        }
+        canvas.clipPath(clipPath)
+
+        val size = (radius * 2.2f).toInt()
+        drawable.setBounds(
+            (cx - size / 2).toInt(),
+            (cy - size / 2).toInt(),
+            (cx + size / 2).toInt(),
+            (cy + size / 2).toInt()
+        )
+        drawable.draw(canvas)
+        canvas.restore() // restore clip
+
+        // Outer Gold Rim Frame
+        paint.style = Paint.Style.STROKE
+        paint.strokeWidth = radius * 0.1f
+        paint.color = Color.parseColor("#C9962C")
+        canvas.drawCircle(cx, cy, radius * 0.95f, paint)
+
+        canvas.restore() // restore rotation
     }
 
     private fun drawClover(canvas: Canvas, paint: Paint, cx: Float, cy: Float, r: Float, ritual: Float, customColor: Int?) {
@@ -237,6 +306,80 @@ enum class CharmType(val displayName: String, val baseColor: Int) {
 
         canvas.restore()
         paint.isFakeBoldText = false
+    }
+
+    private fun drawPuppy(canvas: Canvas, paint: Paint, cx: Float, cy: Float, r: Float, ritual: Float, customColor: Int?) {
+        val earFlap = sin(ritual * 4f * Math.PI.toFloat()) * 15f // degrees
+        
+        // Base color
+        val basePuppyColor = customColor ?: Color.parseColor("#F5F5DC") // Cream/Beige instead of Tan
+        val headR = r * 0.8f
+        
+        // Ears (Darker brown/black for contrast, very floppy)
+        paint.color = Color.parseColor("#5C4033") // Dark Brown
+        
+        // Left Ear
+        canvas.save()
+        canvas.translate(cx - headR * 0.6f, cy - headR * 0.3f)
+        canvas.rotate(earFlap)
+        val leftEar = RectF(-r*0.35f, -r*0.1f, r*0.25f, r*1.1f)
+        canvas.drawRoundRect(leftEar, r*0.3f, r*0.3f, paint)
+        canvas.restore()
+
+        // Right Ear
+        canvas.save()
+        canvas.translate(cx + headR * 0.6f, cy - headR * 0.3f)
+        canvas.rotate(-earFlap)
+        val rightEar = RectF(-r*0.25f, -r*0.1f, r*0.35f, r*1.1f)
+        canvas.drawRoundRect(rightEar, r*0.3f, r*0.3f, paint)
+        canvas.restore()
+
+        // Head (chubby round shape)
+        paint.color = basePuppyColor
+        canvas.drawCircle(cx, cy, headR, paint)
+        // Cheeks
+        canvas.drawCircle(cx - headR*0.3f, cy + headR*0.2f, headR*0.6f, paint)
+        canvas.drawCircle(cx + headR*0.3f, cy + headR*0.2f, headR*0.6f, paint)
+
+        // Snout area (white)
+        paint.color = Color.parseColor("#FFFFFF")
+        canvas.drawCircle(cx, cy + headR * 0.25f, headR * 0.55f, paint)
+
+        // Cute big Nose
+        paint.color = Color.parseColor("#1A1A1A")
+        val noseRect = RectF(cx - r*0.25f, cy + headR*0.1f, cx + r*0.25f, cy + headR*0.3f)
+        canvas.drawRoundRect(noseRect, r*0.15f, r*0.15f, paint)
+        // Nose glint
+        paint.color = Color.WHITE
+        canvas.drawCircle(cx - r*0.1f, cy + headR*0.15f, r*0.05f, paint)
+
+        // Big Anime Eyes
+        paint.color = Color.parseColor("#1A1A1A")
+        val eyeOffsetX = headR * 0.4f
+        val eyeOffsetY = -headR * 0.15f
+        canvas.drawCircle(cx - eyeOffsetX, cy + eyeOffsetY, r * 0.2f, paint)
+        canvas.drawCircle(cx + eyeOffsetX, cy + eyeOffsetY, r * 0.2f, paint)
+        
+        // Eye glints (multiple for cuteness)
+        paint.color = Color.WHITE
+        canvas.drawCircle(cx - eyeOffsetX + r*0.05f, cy + eyeOffsetY - r*0.08f, r * 0.08f, paint)
+        canvas.drawCircle(cx - eyeOffsetX - r*0.08f, cy + eyeOffsetY + r*0.05f, r * 0.04f, paint)
+        
+        canvas.drawCircle(cx + eyeOffsetX + r*0.05f, cy + eyeOffsetY - r*0.08f, r * 0.08f, paint)
+        canvas.drawCircle(cx + eyeOffsetX - r*0.08f, cy + eyeOffsetY + r*0.05f, r * 0.04f, paint)
+        
+        // Happy open mouth / Tongue
+        val tongueExtension = if (ritual > 0.1f) sin(ritual * Math.PI.toFloat()) * r * 0.4f else r * 0.1f
+        paint.color = Color.parseColor("#FF99C8")
+        val tongueRect = RectF(cx - r*0.2f, cy + headR*0.4f, cx + r*0.2f, cy + headR*0.45f + tongueExtension)
+        canvas.drawRoundRect(tongueRect, r*0.15f, r*0.15f, paint)
+        
+        // tongue line
+        paint.color = Color.parseColor("#E07A9F")
+        paint.style = Paint.Style.STROKE
+        paint.strokeWidth = r * 0.02f
+        canvas.drawLine(cx, cy + headR*0.45f, cx, cy + headR*0.45f + tongueExtension - r*0.05f, paint)
+        paint.style = Paint.Style.FILL
     }
     
     private fun darkenColor(color: Int): Int {

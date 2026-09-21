@@ -6,6 +6,7 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Path
+import android.graphics.drawable.Drawable
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
@@ -13,6 +14,7 @@ import android.hardware.SensorManager
 import android.view.Choreographer
 import android.view.MotionEvent
 import android.view.View
+import androidx.core.content.ContextCompat
 import kotlin.math.abs
 import kotlin.math.hypot
 import kotlin.math.sin
@@ -183,6 +185,15 @@ class CharmView(context: Context) : View(context) {
 
             invalidate()
             Choreographer.getInstance().postFrameCallback(this)
+        }
+    }
+
+    private val drawableCache = mutableMapOf<Int, Drawable>()
+
+    private fun getDrawableForCharm(charm: CharmType): Drawable? {
+        val resId = charm.drawableRes ?: return null
+        return drawableCache.getOrPut(resId) {
+            ContextCompat.getDrawable(context, resId)!!
         }
     }
 
@@ -413,7 +424,8 @@ class CharmView(context: Context) : View(context) {
         canvas.drawCircle(pointsX[SEGMENTS - 3], pointsY[SEGMENTS - 3], 5f, beadPaint)
         canvas.drawCircle(pointsX[SEGMENTS - 2], pointsY[SEGMENTS - 2], 4f, beadPaint)
 
-        charm.draw(canvas, charmPaint, pointsX[SEGMENTS], pointsY[SEGMENTS], charmRadius, ritualProgress, customColor, customLetter)
+        val customDrawable = getDrawableForCharm(charm)
+        charm.draw(canvas, charmPaint, pointsX[SEGMENTS], pointsY[SEGMENTS], charmRadius, ritualProgress, customColor, customLetter, customDrawable)
         
         onCharmMoved?.invoke(pointsX[SEGMENTS], pointsY[SEGMENTS])
     }
