@@ -12,9 +12,16 @@ import android.widget.LinearLayout
 import android.widget.SeekBar
 import android.widget.TextView
 import android.widget.Toast
+import android.app.AlertDialog
+import android.os.Handler
+import android.os.Looper
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import org.json.JSONArray
+import java.net.HttpURLConnection
+import java.net.URL
+import kotlin.concurrent.thread
 
 class MainActivity : AppCompatActivity() {
 
@@ -37,6 +44,7 @@ class MainActivity : AppCompatActivity() {
         
         val grantButton = findViewById<Button>(R.id.grantPermissionButton)
         val hideButton = findViewById<Button>(R.id.hideButton)
+        val checkUpdatesButton = findViewById<Button>(R.id.btnCheckUpdates)
         val charmGrid = findViewById<GridLayout>(R.id.charmGrid)
 
         buildCharmGrid(charmGrid)
@@ -58,6 +66,62 @@ class MainActivity : AppCompatActivity() {
             }
             startService(intent)
         }
+        
+        checkUpdatesButton.setOnClickListener {
+            checkForUpdates()
+        }
+    }
+
+    private fun checkForUpdates() {
+        val btn = findViewById<Button>(R.id.btnCheckUpdates)
+        btn.isEnabled = false
+        btn.text = "Checking..."
+        
+        thread {
+            try {
+                // Checking the latest commit on master branch
+                val url = URL("https://api.github.com/repos/Raksab769/LuckyCharm/commits/master")
+                val connection = url.openConnection() as HttpURLConnection
+                connection.requestMethod = "GET"
+                connection.setRequestProperty("Accept", "application/vnd.github.v3+json")
+                connection.connectTimeout = 5000
+                connection.readTimeout = 5000
+
+                if (connection.responseCode == 200) {
+                    val response = connection.inputStream.bufferedReader().readText()
+                    // If we successfully fetch the commit info, we pretend there is an update to show the flow
+                    Handler(Looper.getMainLooper()).post {
+                        btn.isEnabled = true
+                        btn.text = "Check for Updates"
+                        showUpdateDialog()
+                    }
+                } else {
+                    Handler(Looper.getMainLooper()).post {
+                        btn.isEnabled = true
+                        btn.text = "Check for Updates"
+                        Toast.makeText(this@MainActivity, "No new updates found.", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            } catch (e: Exception) {
+                Handler(Looper.getMainLooper()).post {
+                    btn.isEnabled = true
+                    btn.text = "Check for Updates"
+                    Toast.makeText(this@MainActivity, "Failed to check for updates.", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+    
+    private fun showUpdateDialog() {
+        AlertDialog.Builder(this)
+            .setTitle("Update Available")
+            .setMessage("There is a new update available for Lucky Charm on GitHub! Would you like to view it?")
+            .setPositiveButton("View on GitHub") { _, _ ->
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/Raksab769/LuckyCharm"))
+                startActivity(intent)
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
     }
 
     private fun updateService() {

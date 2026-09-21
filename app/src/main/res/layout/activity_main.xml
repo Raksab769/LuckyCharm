@@ -141,6 +141,15 @@
         android:layout_marginTop="8dp"
         android:text="@string/hide_charm" />
 
+    <Button
+        android:id="@+id/btnCheckUpdates"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Check for Updates"
+        style="?android:attr/borderlessButtonStyle"
+        android:textColor="#4EA8DE" />
+
     <Space
         android:layout_width="match_parent"
         android:layout_height="0dp"
