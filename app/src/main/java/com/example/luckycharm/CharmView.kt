@@ -55,6 +55,12 @@ class CharmView(context: Context) : View(context) {
             invalidate()
         }
 
+    var customLetter: String? = null
+        set(value) {
+            field = value
+            invalidate()
+        }
+
     var gyroSensitivity: Float = 1.0f
 
     var onRepositioned: ((screenX: Float) -> Unit)? = null
@@ -407,7 +413,7 @@ class CharmView(context: Context) : View(context) {
         canvas.drawCircle(pointsX[SEGMENTS - 3], pointsY[SEGMENTS - 3], 5f, beadPaint)
         canvas.drawCircle(pointsX[SEGMENTS - 2], pointsY[SEGMENTS - 2], 4f, beadPaint)
 
-        charm.draw(canvas, charmPaint, pointsX[SEGMENTS], pointsY[SEGMENTS], charmRadius, ritualProgress, customColor)
+        charm.draw(canvas, charmPaint, pointsX[SEGMENTS], pointsY[SEGMENTS], charmRadius, ritualProgress, customColor, customLetter)
         
         onCharmMoved?.invoke(pointsX[SEGMENTS], pointsY[SEGMENTS])
     }

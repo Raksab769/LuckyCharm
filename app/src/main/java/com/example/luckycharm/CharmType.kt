@@ -22,10 +22,11 @@ enum class CharmType(val displayName: String, val baseColor: Int) {
     LADYBIRD("Ladybird", Color.parseColor("#E63946")),
     LOVE("Love Dangle", Color.parseColor("#E0457B")),
     PUBG_HELMET("Level 3 Helmet", Color.parseColor("#4B5320")),
-    PUBG_PAN("Winner Pan", Color.parseColor("#2C2C2C"));
+    PUBG_PAN("Winner Pan", Color.parseColor("#2C2C2C")),
+    ALPHABET("Alphabet Letter", Color.parseColor("#E9C46A"));
 
     /** Draw the charm centered at (cx, cy) with the given radius. [ritual] is 0..1 progress of the tap animation. */
-    fun draw(canvas: Canvas, paint: Paint, cx: Float, cy: Float, radius: Float, ritual: Float, customColor: Int? = null) {
+    fun draw(canvas: Canvas, paint: Paint, cx: Float, cy: Float, radius: Float, ritual: Float, customColor: Int? = null, letter: String? = null) {
         paint.style = Paint.Style.FILL
         paint.color = customColor ?: baseColor
         when (this) {
@@ -37,6 +38,7 @@ enum class CharmType(val displayName: String, val baseColor: Int) {
             LOVE -> drawLove(canvas, paint, cx, cy, radius, ritual, customColor)
             PUBG_HELMET -> drawPubgHelmet(canvas, paint, cx, cy, radius, ritual, customColor)
             PUBG_PAN -> drawPubgPan(canvas, paint, cx, cy, radius, ritual, customColor)
+            ALPHABET -> drawAlphabet(canvas, paint, cx, cy, radius, ritual, customColor, letter)
         }
     }
 
@@ -203,6 +205,38 @@ enum class CharmType(val displayName: String, val baseColor: Int) {
 
         canvas.restore()
         paint.style = Paint.Style.FILL
+    }
+
+    private fun drawAlphabet(canvas: Canvas, paint: Paint, cx: Float, cy: Float, r: Float, ritual: Float, customColor: Int?, letter: String?) {
+        val displayLetter = (letter?.take(1) ?: "A").uppercase()
+        val spin = ritual * 2f * Math.PI.toFloat()
+        
+        canvas.save()
+        canvas.rotate(Math.toDegrees(spin.toDouble()).toFloat(), cx, cy)
+
+        // Draw coin base
+        paint.color = customColor ?: Color.parseColor("#E9C46A")
+        paint.style = Paint.Style.FILL
+        canvas.drawCircle(cx, cy, r * 0.9f, paint)
+        
+        // Draw rim
+        paint.style = Paint.Style.STROKE
+        paint.strokeWidth = r * 0.1f
+        paint.color = darkenColor(paint.color)
+        canvas.drawCircle(cx, cy, r * 0.85f, paint)
+        
+        // Draw text
+        paint.style = Paint.Style.FILL
+        paint.color = Color.parseColor("#1B263B") // dark navy
+        paint.textSize = r * 1.2f
+        paint.textAlign = Paint.Align.CENTER
+        paint.isFakeBoldText = true
+        // adjust cy to center text vertically
+        val textOffset = (paint.descent() + paint.ascent()) / 2
+        canvas.drawText(displayLetter, cx, cy - textOffset, paint)
+
+        canvas.restore()
+        paint.isFakeBoldText = false
     }
     
     private fun darkenColor(color: Int): Int {

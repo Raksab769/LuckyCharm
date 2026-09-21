@@ -24,6 +24,7 @@ class CharmOverlayService : Service() {
         const val EXTRA_SENSITIVITY = "extra_sensitivity"
         const val EXTRA_COLOR = "extra_color"
         const val EXTRA_POSITION_RATIO = "extra_position_ratio"
+        const val EXTRA_LETTER = "extra_letter"
         const val ACTION_HIDE = "com.example.luckycharm.action.HIDE"
         private const val CHANNEL_ID = "lucky_charm_channel"
         private const val NOTIF_ID = 1001
@@ -57,6 +58,7 @@ class CharmOverlayService : Service() {
         val sensitivity = intent?.getFloatExtra(EXTRA_SENSITIVITY, 1.0f) ?: 1.0f
         val positionRatio = intent?.getFloatExtra(EXTRA_POSITION_RATIO, 0.5f) ?: 0.5f
         val color = if (intent?.hasExtra(EXTRA_COLOR) == true) intent.getIntExtra(EXTRA_COLOR, 0) else null
+        val letter = intent?.getStringExtra(EXTRA_LETTER)
 
         // Recreate overlay on orientation change or config change since bounds are different
         if (charmView != null) {
@@ -72,12 +74,12 @@ class CharmOverlayService : Service() {
             charmTouchView = null
         }
         
-        addOverlay(charm, sensitivity, color, positionRatio)
+        addOverlay(charm, sensitivity, color, positionRatio, letter)
 
         return START_STICKY
     }
 
-    private fun addOverlay(charm: CharmType, sensitivity: Float, color: Int?, positionRatio: Float) {
+    private fun addOverlay(charm: CharmType, sensitivity: Float, color: Int?, positionRatio: Float, letter: String?) {
         val metrics = resources.displayMetrics
         val density = metrics.density
         val charmSizePx = (CHARM_SIZE_DP * density).toInt()
@@ -114,6 +116,7 @@ class CharmOverlayService : Service() {
             this.charm = charm
             this.gyroSensitivity = sensitivity
             this.customColor = color
+            this.customLetter = letter
             this.anchorRatio = positionRatio
         }
         windowManager.addView(view, drawParams)
@@ -236,6 +239,9 @@ class CharmOverlayService : Service() {
         val currentCharm = charmView?.charm ?: CharmType.CLOVER
         val currentSensitivity = charmView?.gyroSensitivity ?: 1.0f
         val currentColor = charmView?.customColor
+        val currentLetter = charmView?.customLetter
+
+        val currentRatio = charmView?.anchorRatio ?: 0.5f
 
         charmView?.cleanup()
         charmView?.let { windowManager.removeView(it) }
@@ -246,7 +252,7 @@ class CharmOverlayService : Service() {
         pegTouchView = null
         charmTouchView = null
 
-        addOverlay(currentCharm, currentSensitivity, currentColor, charmView?.anchorRatio ?: 0.5f)
+        addOverlay(currentCharm, currentSensitivity, currentColor, currentRatio, currentLetter)
     }
 
     override fun onDestroy() {

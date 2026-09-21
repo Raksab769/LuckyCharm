@@ -15,6 +15,9 @@ import android.widget.Toast
 import android.app.AlertDialog
 import android.os.Handler
 import android.os.Looper
+import android.text.InputFilter
+import android.view.View
+import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -26,6 +29,7 @@ import kotlin.concurrent.thread
 class MainActivity : AppCompatActivity() {
 
     private var selectedCharm: CharmType = CharmType.CLOVER
+    private var selectedLetter: String? = null
     private var selectedColor: Int? = null
     private var gyroSensitivity: Float = 0.05f
     private var positionRatio: Float = 0.5f
@@ -131,6 +135,7 @@ class MainActivity : AppCompatActivity() {
                 putExtra(CharmOverlayService.EXTRA_CHARM, selectedCharm.name)
                 putExtra(CharmOverlayService.EXTRA_SENSITIVITY, gyroSensitivity)
                 putExtra(CharmOverlayService.EXTRA_POSITION_RATIO, positionRatio)
+                putExtra(CharmOverlayService.EXTRA_LETTER, selectedLetter)
                 selectedColor?.let { putExtra(CharmOverlayService.EXTRA_COLOR, it) }
             }
             ContextCompat.startForegroundService(this@MainActivity, updateIntent)
@@ -206,13 +211,40 @@ class MainActivity : AppCompatActivity() {
                 }
                 layoutParams = params
                 setOnClickListener {
-                    selectedCharm = charm
-                    Toast.makeText(context, "${charm.displayName} selected", Toast.LENGTH_SHORT).show()
-                    updateService()
+                    if (charm == CharmType.ALPHABET) {
+                        showAlphabetDialog(charm)
+                    } else {
+                        selectedCharm = charm
+                        selectedLetter = null
+                        Toast.makeText(context, "${charm.displayName} selected", Toast.LENGTH_SHORT).show()
+                        updateService()
+                    }
                 }
             }
             grid.addView(button)
         }
+    }
+
+    private fun showAlphabetDialog(charm: CharmType) {
+        val input = EditText(this)
+        input.filters = arrayOf(InputFilter.LengthFilter(1))
+        input.isSingleLine = true
+        input.textAlignment = View.TEXT_ALIGNMENT_CENTER
+
+        AlertDialog.Builder(this)
+            .setTitle("Choose a Letter")
+            .setView(input)
+            .setPositiveButton("OK") { _, _ ->
+                val letter = input.text.toString().trim()
+                if (letter.isNotEmpty()) {
+                    selectedCharm = charm
+                    selectedLetter = letter.uppercase()
+                    Toast.makeText(this, "${charm.displayName} ($selectedLetter) selected", Toast.LENGTH_SHORT).show()
+                    updateService()
+                }
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
     }
 
     private fun refreshPermissionStatus() {
