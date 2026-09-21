@@ -13,6 +13,11 @@ import android.widget.SeekBar
 import android.widget.TextView
 import android.widget.Toast
 import android.app.AlertDialog
+import android.app.DownloadManager
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.IntentFilter
+import android.os.Environment
 import android.os.Handler
 import android.os.Looper
 import android.text.InputFilter
@@ -22,6 +27,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import org.json.JSONArray
+import java.io.File
 import java.net.HttpURLConnection
 import java.net.URL
 import kotlin.concurrent.thread
@@ -116,16 +122,68 @@ class MainActivity : AppCompatActivity() {
         }
     }
     
+    private var downloadId: Long = -1L
+
     private fun showUpdateDialog() {
         AlertDialog.Builder(this)
             .setTitle("Update Available")
-            .setMessage("There is a new update available for Lucky Charm on GitHub! Would you like to view it?")
-            .setPositiveButton("View on GitHub") { _, _ ->
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/Raksab769/LuckyCharm"))
-                startActivity(intent)
+            .setMessage("There is a new update available for Lucky Charm! Would you like to download and install it now?")
+            .setPositiveButton("Update Now") { _, _ ->
+                downloadAndInstallUpdate()
             }
             .setNegativeButton("Cancel", null)
             .show()
+    }
+
+    private fun downloadAndInstallUpdate() {
+        Toast.makeText(this, "Downloading update...", Toast.LENGTH_SHORT).show()
+        val apkUrl = "https://raw.githubusercontent.com/Raksab769/LuckyCharm/master/app/release/app-release.apk"
+        
+        val request = DownloadManager.Request(Uri.parse(apkUrl))
+            .setTitle("Lucky Charm Update")
+            .setDescription("Downloading latest version")
+            .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+            .setMimeType("application/vnd.android.package-archive")
+            .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "LuckyCharm-update.apk")
+
+        val downloadManager = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
+        
+        // Remove previous downloaded file if exists to prevent rename conflicts
+        val file =
+            File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "LuckyCharm-update.apk")
+        if (file.exists()) file.delete()
+
+        downloadId = downloadManager.enqueue(request)
+
+        val receiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context, intent: Intent) {
+                val id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
+                if (id == downloadId) {
+                    val uri = downloadManager.getUriForDownloadedFile(downloadId)
+                    if (uri != null) {
+                        val installIntent = Intent(Intent.ACTION_VIEW).apply {
+                            setDataAndType(uri, "application/vnd.android.package-archive")
+                            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_GRANT_READ_URI_PERMISSION
+                        }
+                        try {
+                            startActivity(installIntent)
+                        } catch (e: Exception) {
+                            Toast.makeText(context, "Failed to start installer.", Toast.LENGTH_SHORT).show()
+                        }
+                    } else {
+                        Toast.makeText(context, "Download failed.", Toast.LENGTH_SHORT).show()
+                    }
+                    context.unregisterReceiver(this)
+                }
+            }
+        }
+        val filter = IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(receiver, filter, RECEIVER_EXPORTED)
+        } else {
+            @Suppress("UnspecifiedRegisterReceiverFlag")
+            registerReceiver(receiver, filter)
+        }
     }
 
     private fun updateService() {
