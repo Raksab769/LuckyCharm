@@ -30,8 +30,8 @@ enum class CharmType(
     PUBG_HELMET("Level 3 Helmet", Color.parseColor("#4B5320")),
     PUBG_PAN("Winner Pan", Color.parseColor("#2C2C2C")),
     ALPHABET("Alphabet Letter", Color.parseColor("#E9C46A")),
-    PHOTO_1("Photo Charm 1", Color.parseColor("#8E44AD"), R.drawable.istockphoto_1005374612_612x612),
-    PHOTO_2("Photo Charm 2", Color.parseColor("#2980B9"), R.drawable.istockphoto_1339851357_612x612);
+    PHOTO_1("Paw", Color.parseColor("#8E44AD"), R.drawable.istockphoto_1005374612_612x612),
+    PHOTO_2("Puppy", Color.parseColor("#2980B9"), R.drawable.istockphoto_1339851357_612x612);
     /** Draw the charm centered at (cx, cy) with the given radius. [ritual] is 0..1 progress of the tap animation. */
     fun draw(
         canvas: Canvas,
