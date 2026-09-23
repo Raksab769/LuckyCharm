@@ -60,8 +60,7 @@ class MainActivity : AppCompatActivity() {
 
         buildCharmGrid(charmGrid)
         setupSensitivityBar()
-        setupColorPalette()
-        setupStringColorPalette()
+        setupColorPickers()
         setupPositionButtons()
 
         grantButton.setOnClickListener { requestOverlayPermission() }
@@ -222,42 +221,86 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-    private fun setupColorPalette() {
-        findViewById<Button>(R.id.colorDefault).setOnClickListener { 
-            selectedColor = null; updateService() 
-            Toast.makeText(this, "Default color", Toast.LENGTH_SHORT).show()
+    private fun setupColorPickers() {
+        updateColorPreviews()
+
+        val charmPreview = findViewById<View>(R.id.charmColorPreview)
+        val stringPreview = findViewById<View>(R.id.stringColorPreview)
+
+        val openCharmPicker = {
+            showColorPickerDialog(
+                "Choose Charm Color",
+                selectedColor ?: selectedCharm.baseColor
+            ) { newColor ->
+                selectedColor = newColor
+                updateColorPreviews()
+                updateService()
+            }
         }
-        findViewById<Button>(R.id.colorRed).setOnClickListener { 
-            selectedColor = 0xFFE63946.toInt(); updateService() 
+
+        charmPreview.setOnClickListener { openCharmPicker() }
+        findViewById<Button>(R.id.btnPickCharmColor).setOnClickListener { openCharmPicker() }
+        findViewById<Button>(R.id.btnResetCharmColor).setOnClickListener {
+            selectedColor = null
+            updateColorPreviews()
+            updateService()
+            Toast.makeText(this, "Charm color reset to default", Toast.LENGTH_SHORT).show()
         }
-        findViewById<Button>(R.id.colorBlue).setOnClickListener { 
-            selectedColor = 0xFF4EA8DE.toInt(); updateService() 
+
+        val openStringPicker = {
+            showColorPickerDialog(
+                "Choose String Color",
+                selectedStringColor ?: 0xFFAAAAAA.toInt()
+            ) { newColor ->
+                selectedStringColor = newColor
+                updateColorPreviews()
+                updateService()
+            }
         }
-        findViewById<Button>(R.id.colorGreen).setOnClickListener { 
-            selectedColor = 0xFF3FA34D.toInt(); updateService() 
-        }
-        findViewById<Button>(R.id.colorGold).setOnClickListener { 
-            selectedColor = 0xFFC9962C.toInt(); updateService() 
+
+        stringPreview.setOnClickListener { openStringPicker() }
+        findViewById<Button>(R.id.btnPickStringColor).setOnClickListener { openStringPicker() }
+        findViewById<Button>(R.id.btnResetStringColor).setOnClickListener {
+            selectedStringColor = null
+            updateColorPreviews()
+            updateService()
+            Toast.makeText(this, "String color reset to default", Toast.LENGTH_SHORT).show()
         }
     }
 
-    private fun setupStringColorPalette() {
-        findViewById<Button>(R.id.stringColorDefault).setOnClickListener { 
-            selectedStringColor = null; updateService() 
-            Toast.makeText(this, "Default string color", Toast.LENGTH_SHORT).show()
+    private fun updateColorPreviews() {
+        val charmPreview = findViewById<View>(R.id.charmColorPreview)
+        val stringPreview = findViewById<View>(R.id.stringColorPreview)
+        charmPreview?.setBackgroundColor(selectedColor ?: selectedCharm.baseColor)
+        stringPreview?.setBackgroundColor(selectedStringColor ?: 0xFFAAAAAA.toInt())
+    }
+
+    private fun showColorPickerDialog(
+        title: String,
+        initialColor: Int,
+        onColorSelected: (Int) -> Unit
+    ) {
+        val view = layoutInflater.inflate(R.layout.dialog_color_picker, null)
+        val colorPickerView = view.findViewById<ColorWheelPickerView>(R.id.colorWheelPicker)
+        val hexText = view.findViewById<TextView>(R.id.colorHexText)
+
+        colorPickerView.color = initialColor
+        hexText.text = String.format("#%06X", 0xFFFFFF and colorPickerView.color)
+        hexText.setTextColor(colorPickerView.color)
+
+        colorPickerView.onColorChanged = { newColor ->
+            hexText.text = String.format("#%06X", 0xFFFFFF and newColor)
+            hexText.setTextColor(newColor)
         }
-        findViewById<Button>(R.id.stringColorGold).setOnClickListener { 
-            selectedStringColor = 0xFFC9962C.toInt(); updateService() 
-        }
-        findViewById<Button>(R.id.stringColorBlack).setOnClickListener { 
-            selectedStringColor = 0xFF1A1A1A.toInt(); updateService() 
-        }
-        findViewById<Button>(R.id.stringColorRed).setOnClickListener { 
-            selectedStringColor = 0xFFE63946.toInt(); updateService() 
-        }
-        findViewById<Button>(R.id.stringColorBlue).setOnClickListener { 
-            selectedStringColor = 0xFF4EA8DE.toInt(); updateService() 
-        }
+
+        AlertDialog.Builder(this)
+            .setTitle(title)
+            .setView(view)
+            .setPositiveButton("Apply") { _, _ ->
+                onColorSelected(colorPickerView.color)
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
     }
 
     private fun setupPositionButtons() {
@@ -296,6 +339,7 @@ class MainActivity : AppCompatActivity() {
                     } else {
                         selectedCharm = charm
                         selectedLetter = null
+                        updateColorPreviews()
                         Toast.makeText(context, "${charm.displayName} selected", Toast.LENGTH_SHORT).show()
                         updateService()
                     }
@@ -319,6 +363,7 @@ class MainActivity : AppCompatActivity() {
                 if (letter.isNotEmpty()) {
                     selectedCharm = charm
                     selectedLetter = letter.uppercase()
+                    updateColorPreviews()
                     Toast.makeText(this, "${charm.displayName} ($selectedLetter) selected", Toast.LENGTH_SHORT).show()
                     updateService()
                 }

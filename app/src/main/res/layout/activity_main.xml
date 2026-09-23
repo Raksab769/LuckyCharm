@@ -84,49 +84,81 @@
         android:max="200"
         android:progress="5" />
 
+    <!-- Charm Color Section -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Custom Color (Optional)"
+        android:text="Charm Color"
         android:textStyle="bold" />
 
     <LinearLayout
-        android:id="@+id/colorPalette"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:orientation="horizontal"
-        android:gravity="center_horizontal">
+        android:gravity="center_vertical">
 
-        <Button android:id="@+id/colorDefault" android:layout_width="48dp" android:layout_height="48dp" android:layout_margin="4dp" android:backgroundTint="#FFFFFF" android:text="X"/>
-        <Button android:id="@+id/colorRed" android:layout_width="48dp" android:layout_height="48dp" android:layout_margin="4dp" android:backgroundTint="#E63946"/>
-        <Button android:id="@+id/colorBlue" android:layout_width="48dp" android:layout_height="48dp" android:layout_margin="4dp" android:backgroundTint="#4EA8DE"/>
-        <Button android:id="@+id/colorGreen" android:layout_width="48dp" android:layout_height="48dp" android:layout_margin="4dp" android:backgroundTint="#3FA34D"/>
-        <Button android:id="@+id/colorGold" android:layout_width="48dp" android:layout_height="48dp" android:layout_margin="4dp" android:backgroundTint="#C9962C"/>
+        <View
+            android:id="@+id/charmColorPreview"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="12dp"
+            android:background="#3FA34D" />
+
+        <Button
+            android:id="@+id/btnPickCharmColor"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Pick Charm Color" />
+
+        <Button
+            android:id="@+id/btnResetCharmColor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="Reset"
+            style="?android:attr/borderlessButtonStyle" />
 
     </LinearLayout>
 
+    <!-- String Color Section -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="String Color (Optional)"
+        android:text="String Color"
         android:textStyle="bold" />
 
     <LinearLayout
-        android:id="@+id/stringColorPalette"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:orientation="horizontal"
-        android:gravity="center_horizontal">
+        android:gravity="center_vertical">
 
-        <Button android:id="@+id/stringColorDefault" android:layout_width="48dp" android:layout_height="48dp" android:layout_margin="4dp" android:backgroundTint="#AAAAAA" android:text="X"/>
-        <Button android:id="@+id/stringColorGold" android:layout_width="48dp" android:layout_height="48dp" android:layout_margin="4dp" android:backgroundTint="#C9962C"/>
-        <Button android:id="@+id/stringColorBlack" android:layout_width="48dp" android:layout_height="48dp" android:layout_margin="4dp" android:backgroundTint="#1A1A1A"/>
-        <Button android:id="@+id/stringColorRed" android:layout_width="48dp" android:layout_height="48dp" android:layout_margin="4dp" android:backgroundTint="#E63946"/>
-        <Button android:id="@+id/stringColorBlue" android:layout_width="48dp" android:layout_height="48dp" android:layout_margin="4dp" android:backgroundTint="#4EA8DE"/>
+        <View
+            android:id="@+id/stringColorPreview"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="12dp"
+            android:background="#AAAAAA" />
+
+        <Button
+            android:id="@+id/btnPickStringColor"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Pick String Color" />
+
+        <Button
+            android:id="@+id/btnResetStringColor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="Reset"
+            style="?android:attr/borderlessButtonStyle" />
 
     </LinearLayout>
 
