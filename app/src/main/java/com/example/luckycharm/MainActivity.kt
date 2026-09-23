@@ -47,6 +47,7 @@ class MainActivity : AppCompatActivity() {
     private var selectedStringColor: Int? = null
     private var gyroSensitivity: Float = 0.05f
     private var positionRatio: Float = 0.5f
+    private var isHanging = false
 
     private lateinit var statusText: TextView
     private lateinit var hangButton: Button
@@ -61,7 +62,6 @@ class MainActivity : AppCompatActivity() {
         sensitivityValueText = findViewById(R.id.sensitivityValueText)
         
         val grantButton = findViewById<Button>(R.id.grantPermissionButton)
-        val hideButton = findViewById<Button>(R.id.hideButton)
         val checkUpdatesButton = findViewById<Button>(R.id.btnCheckUpdates)
         val charmGrid = findViewById<GridLayout>(R.id.charmGrid)
 
@@ -74,15 +74,22 @@ class MainActivity : AppCompatActivity() {
 
         hangButton.setOnClickListener {
             maybeRequestNotificationPermission()
-            updateService()
-            Toast.makeText(this, "${selectedCharm.displayName} is hanging up top!", Toast.LENGTH_SHORT).show()
-        }
-
-        hideButton.setOnClickListener {
-            val intent = Intent(this, CharmOverlayService::class.java).apply {
-                action = CharmOverlayService.ACTION_HIDE
+            if (!isHanging) {
+                updateService()
+                isHanging = true
+                hangButton.text = "🔴 REMOVE CHARM"
+                hangButton.setBackgroundResource(R.drawable.bg_neon_red)
+                Toast.makeText(this, "${selectedCharm.displayName} is hanging up top!", Toast.LENGTH_SHORT).show()
+            } else {
+                val intent = Intent(this, CharmOverlayService::class.java).apply {
+                    action = CharmOverlayService.ACTION_HIDE
+                }
+                startService(intent)
+                isHanging = false
+                hangButton.text = "✨ HANG CHARM"
+                hangButton.setBackgroundResource(R.drawable.bg_neon_green)
+                Toast.makeText(this, "Charm removed", Toast.LENGTH_SHORT).show()
             }
-            startService(intent)
         }
         
         checkUpdatesButton.setOnClickListener {
@@ -260,47 +267,29 @@ class MainActivity : AppCompatActivity() {
     private fun setupColorPickers() {
         updateColorPreviews()
 
-        val charmPreview = findViewById<View>(R.id.charmColorPreview)
-        val stringPreview = findViewById<View>(R.id.stringColorPreview)
+        val btnCharm = findViewById<View>(R.id.btnPickCharmColor)
+        val btnString = findViewById<View>(R.id.btnPickStringColor)
 
-        val openCharmPicker = {
+        btnCharm?.setOnClickListener {
             showColorPickerDialog(
                 "Choose Charm Color",
                 selectedColor ?: selectedCharm.baseColor
             ) { newColor ->
                 selectedColor = newColor
                 updateColorPreviews()
-                updateService()
+                if (isHanging) updateService()
             }
         }
 
-        charmPreview.setOnClickListener { openCharmPicker() }
-        findViewById<Button>(R.id.btnPickCharmColor).setOnClickListener { openCharmPicker() }
-        findViewById<Button>(R.id.btnResetCharmColor).setOnClickListener {
-            selectedColor = null
-            updateColorPreviews()
-            updateService()
-            Toast.makeText(this, "Charm color reset to default", Toast.LENGTH_SHORT).show()
-        }
-
-        val openStringPicker = {
+        btnString?.setOnClickListener {
             showColorPickerDialog(
                 "Choose String Color",
                 selectedStringColor ?: 0xFFAAAAAA.toInt()
             ) { newColor ->
                 selectedStringColor = newColor
                 updateColorPreviews()
-                updateService()
+                if (isHanging) updateService()
             }
-        }
-
-        stringPreview.setOnClickListener { openStringPicker() }
-        findViewById<Button>(R.id.btnPickStringColor).setOnClickListener { openStringPicker() }
-        findViewById<Button>(R.id.btnResetStringColor).setOnClickListener {
-            selectedStringColor = null
-            updateColorPreviews()
-            updateService()
-            Toast.makeText(this, "String color reset to default", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -353,15 +342,21 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupPositionButtons() {
-        findViewById<Button>(R.id.posLeft).setOnClickListener { 
-            positionRatio = 0.08f; updateService()
+        val btnLeft = findViewById<Button>(R.id.posLeft)
+        val btnCenter = findViewById<Button>(R.id.posCenter)
+        val btnRight = findViewById<Button>(R.id.posRight)
+
+        val updatePosButtons = { ratio: Float ->
+            positionRatio = ratio
+            btnLeft?.setBackgroundResource(if (ratio == 0.08f) R.drawable.bg_neon_purple else R.drawable.bg_neon_subtle)
+            btnCenter?.setBackgroundResource(if (ratio == 0.5f) R.drawable.bg_neon_purple else R.drawable.bg_neon_subtle)
+            btnRight?.setBackgroundResource(if (ratio == 0.90f) R.drawable.bg_neon_purple else R.drawable.bg_neon_subtle)
+            if (isHanging) updateService()
         }
-        findViewById<Button>(R.id.posCenter).setOnClickListener { 
-            positionRatio = 0.5f; updateService() 
-        }
-        findViewById<Button>(R.id.posRight).setOnClickListener { 
-            positionRatio = 0.90f; updateService()
-        }
+
+        btnLeft?.setOnClickListener { updatePosButtons(0.08f) }
+        btnCenter?.setOnClickListener { updatePosButtons(0.5f) }
+        btnRight?.setOnClickListener { updatePosButtons(0.90f) }
     }
 
     override fun onResume() {
@@ -448,12 +443,13 @@ class MainActivity : AppCompatActivity() {
 
     private fun refreshPermissionStatus() {
         val hasPermission = Settings.canDrawOverlays(this)
+        val permissionCard = findViewById<View>(R.id.permissionCard)
         statusText.text = if (hasPermission) {
             getString(R.string.status_permission_granted)
         } else {
             getString(R.string.status_permission_needed)
         }
-        hangButton.isEnabled = hasPermission
+        permissionCard?.visibility = if (hasPermission) View.GONE else View.VISIBLE
     }
 
     private fun requestOverlayPermission() {

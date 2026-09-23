@@ -3,283 +3,344 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true">
+    android:fillViewport="true"
+    android:background="@color/bg_dark">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="24dp"
+        android:padding="20dp"
         android:gravity="center_horizontal">
 
-    <TextView
-        android:id="@+id/titleText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:text="@string/app_name"
-        android:textSize="28sp"
-        android:textStyle="bold"
-        android:textColor="?android:attr/textColorPrimary" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="24dp"
-        android:text="@string/subtitle"
-        android:textSize="14sp"
-        android:textColor="?android:attr/textColorSecondary" />
-
-    <TextView
-        android:id="@+id/statusText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:text="@string/status_permission_needed"
-        android:textAlignment="center"
-        android:textColor="?android:attr/textColorPrimary" />
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/grantPermissionButton"
-        android:layout_width="match_parent"
-        android:layout_height="52dp"
-        android:text="@string/grant_permission"
-        android:textColor="#FFFFFF"
-        android:textStyle="bold"
-        android:background="@drawable/bg_neon_gold" />
-
-    <GridLayout
-        android:id="@+id/charmGrid"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:columnCount="3"
-        android:rowCount="2" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:orientation="horizontal"
-        android:gravity="bottom">
-        <TextView
-            android:layout_width="wrap_content"
+        <!-- Top Header Bar -->
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Sensitivity"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true">
+
+                <TextView
+                    android:id="@+id/titleText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/app_name"
+                    android:textSize="26sp"
+                    android:textStyle="bold"
+                    android:textColor="#FFFFFF" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/subtitle"
+                    android:textSize="13sp"
+                    android:textColor="#AAAAAA" />
+
+            </LinearLayout>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnCheckUpdates"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:paddingHorizontal="16dp"
+                android:text="Updates 🔄"
+                android:textSize="12sp"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold"
+                android:background="@drawable/bg_neon_cyan" />
+
+        </RelativeLayout>
+
+        <!-- Conditional Permission Banner Card -->
+        <LinearLayout
+            android:id="@+id/permissionCard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/bg_card_dark">
+
+            <TextView
+                android:id="@+id/statusText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:text="@string/status_permission_needed"
+                android:textAlignment="center"
+                android:textSize="14sp"
+                android:textColor="#FFCC00" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/grantPermissionButton"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:text="@string/grant_permission"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold"
+                android:background="@drawable/bg_neon_gold" />
+
+        </LinearLayout>
+
+        <!-- Card 1: Choose Charm -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/bg_card_dark">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:text="CHOOSE CHARM"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.1"
+                android:textColor="#6C63FF" />
+
+            <GridLayout
+                android:id="@+id/charmGrid"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:columnCount="3"
+                android:rowCount="2" />
+
+        </LinearLayout>
+
+        <!-- Card 2: Customization & Appearance -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/bg_card_dark">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:text="CUSTOMIZATION"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.1"
+                android:textColor="#4EA8DE" />
+
+            <!-- Colors Row -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <!-- Charm Color Swatch Button -->
+                <LinearLayout
+                    android:id="@+id/btnPickCharmColor"
+                    android:layout_width="0dp"
+                    android:layout_height="52dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="6dp"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:paddingHorizontal="12dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="@drawable/bg_neon_purple">
+
+                    <View
+                        android:id="@+id/charmColorPreview"
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:layout_marginEnd="8dp"
+                        android:background="@drawable/bg_circle_preview" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Charm"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        android:textColor="#FFFFFF" />
+
+                </LinearLayout>
+
+                <!-- String Color Swatch Button -->
+                <LinearLayout
+                    android:id="@+id/btnPickStringColor"
+                    android:layout_width="0dp"
+                    android:layout_height="52dp"
+                    android:layout_weight="1"
+                    android:layout_marginStart="6dp"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:paddingHorizontal="12dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="@drawable/bg_neon_cyan">
+
+                    <View
+                        android:id="@+id/stringColorPreview"
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:layout_marginEnd="8dp"
+                        android:background="@drawable/bg_circle_preview" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="String"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        android:textColor="#FFFFFF" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- Position Row -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp"
+                android:text="Position"
+                android:textSize="13sp"
+                android:textColor="#CCCCCC" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/posLeft"
+                    android:layout_width="0dp"
+                    android:layout_height="42dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="4dp"
+                    android:text="Left"
+                    android:textSize="12sp"
+                    android:textColor="#FFFFFF"
+                    android:textStyle="bold"
+                    android:background="@drawable/bg_neon_subtle" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/posCenter"
+                    android:layout_width="0dp"
+                    android:layout_height="42dp"
+                    android:layout_weight="1"
+                    android:layout_marginHorizontal="2dp"
+                    android:text="Center ★"
+                    android:textSize="12sp"
+                    android:textColor="#FFFFFF"
+                    android:textStyle="bold"
+                    android:background="@drawable/bg_neon_purple" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/posRight"
+                    android:layout_width="0dp"
+                    android:layout_height="42dp"
+                    android:layout_marginStart="4dp"
+                    android:layout_weight="1"
+                    android:text="Right"
+                    android:textColor="#FFFFFF"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:background="@drawable/bg_neon_subtle" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- Card 3: Physics & Motion -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/bg_card_dark">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="8dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="PHYSICS &amp; MOTION"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.1"
+                    android:textColor="#3FA34D" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:id="@+id/sensitivityValueText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="5%"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:textColor="#FFFFFF" />
+
+            </LinearLayout>
+
+            <SeekBar
+                android:id="@+id/gyroSensitivityBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:max="200"
+                android:progress="5" />
+
+        </LinearLayout>
+
+        <!-- Smart Action Toggle Button -->
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/hangButton"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:text="✨ HANG CHARM"
+            android:textColor="#FFFFFF"
             android:textStyle="bold"
-            android:textColor="?android:attr/textColorPrimary" />
-        <View
-            android:layout_width="0dp"
+            android:textSize="16sp"
+            android:background="@drawable/bg_neon_green" />
+
+        <Space
+            android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1" />
+
+        <!-- Footer -->
         <TextView
-            android:id="@+id/sensitivityValueText"
-            android:layout_width="wrap_content"
+            android:id="@+id/versionText"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="5%"
-            android:textSize="12sp"
-            android:textColor="?android:attr/textColorSecondary" />
-    </LinearLayout>
-
-    <SeekBar
-        android:id="@+id/gyroSensitivityBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:max="200"
-        android:progress="5" />
-
-    <!-- Charm Color Section -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="Charm Color"
-        android:textStyle="bold"
-        android:textColor="?android:attr/textColorPrimary" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:orientation="horizontal"
-        android:gravity="center_vertical">
-
-        <View
-            android:id="@+id/charmColorPreview"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:layout_marginEnd="12dp"
-            android:background="@drawable/bg_circle_preview" />
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btnPickCharmColor"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_weight="1"
-            android:text="Pick Charm Color"
-            android:textColor="#FFFFFF"
-            android:textStyle="bold"
-            android:background="@drawable/bg_neon_purple" />
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btnResetCharmColor"
-            android:layout_width="wrap_content"
-            android:layout_height="48dp"
-            android:layout_marginStart="8dp"
-            android:paddingHorizontal="16dp"
-            android:text="Reset"
-            android:textColor="#FFFFFF"
-            android:textStyle="bold"
-            android:background="@drawable/bg_neon_subtle" />
-
-    </LinearLayout>
-
-    <!-- String Color Section -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="String Color"
-        android:textStyle="bold"
-        android:textColor="?android:attr/textColorPrimary" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:orientation="horizontal"
-        android:gravity="center_vertical">
-
-        <View
-            android:id="@+id/stringColorPreview"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:layout_marginEnd="12dp"
-            android:background="@drawable/bg_circle_preview" />
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btnPickStringColor"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_weight="1"
-            android:text="Pick String Color"
-            android:textColor="#FFFFFF"
-            android:textStyle="bold"
-            android:background="@drawable/bg_neon_cyan" />
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btnResetStringColor"
-            android:layout_width="wrap_content"
-            android:layout_height="48dp"
-            android:layout_marginStart="8dp"
-            android:paddingHorizontal="16dp"
-            android:text="Reset"
-            android:textColor="#FFFFFF"
-            android:textStyle="bold"
-            android:background="@drawable/bg_neon_subtle" />
-
-    </LinearLayout>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="Position"
-        android:textStyle="bold"
-        android:textColor="?android:attr/textColorPrimary" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:orientation="horizontal"
-        android:gravity="center_horizontal">
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/posLeft"
-            android:layout_width="0dp"
-            android:layout_height="44dp"
-            android:layout_weight="1"
-            android:layout_margin="4dp"
-            android:text="Left"
-            android:textColor="#FFFFFF"
-            android:textStyle="bold"
-            android:background="@drawable/bg_neon_subtle" />
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/posCenter"
-            android:layout_width="0dp"
-            android:layout_height="44dp"
-            android:layout_weight="1"
-            android:layout_margin="4dp"
-            android:text="Center"
-            android:textColor="#FFFFFF"
-            android:textStyle="bold"
-            android:background="@drawable/bg_neon_subtle" />
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/posRight"
-            android:layout_width="0dp"
-            android:layout_height="44dp"
-            android:layout_weight="1"
-            android:layout_margin="4dp"
-            android:text="Right"
-            android:textColor="#FFFFFF"
-            android:textStyle="bold"
-            android:background="@drawable/bg_neon_subtle" />
-
-    </LinearLayout>
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/hangButton"
-        android:layout_width="match_parent"
-        android:layout_height="54dp"
-        android:layout_marginTop="28dp"
-        android:text="@string/hang_charm"
-        android:textColor="#FFFFFF"
-        android:textStyle="bold"
-        android:textSize="16sp"
-        android:background="@drawable/bg_neon_green"
-        android:enabled="false" />
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/hideButton"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginTop="12dp"
-        android:text="@string/hide_charm"
-        android:textColor="#FFFFFF"
-        android:textStyle="bold"
-        android:background="@drawable/bg_neon_red" />
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btnCheckUpdates"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginTop="12dp"
-        android:text="Check for Updates"
-        android:textColor="#FFFFFF"
-        android:textStyle="bold"
-        android:background="@drawable/bg_neon_cyan" />
-
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
-
-    <TextView
-        android:id="@+id/versionText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:layout_marginBottom="32dp"
-        android:gravity="center"
-        android:text="Version 1.6 • Developed by Baskar S"
-        android:textSize="14sp"
-        android:textStyle="bold"
-        android:textColor="?android:attr/textColorSecondary" />
+            android:layout_marginTop="28dp"
+            android:layout_marginBottom="20dp"
+            android:gravity="center"
+            android:text="Version 2.0 (11) • Developed by Baskar S"
+            android:textSize="13sp"
+            android:textColor="#888888" />
 
     </LinearLayout>
 </ScrollView>
