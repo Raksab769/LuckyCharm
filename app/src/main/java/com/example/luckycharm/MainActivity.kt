@@ -102,37 +102,53 @@ class MainActivity : AppCompatActivity() {
         val btn = findViewById<Button>(R.id.btnCheckUpdates)
         btn.isEnabled = false
         btn.text = "Checking..."
-        
+
+        @Suppress("DEPRECATION")
+        val currentVersionCode = try {
+            packageManager.getPackageInfo(packageName, 0).versionCode
+        } catch (_: Exception) { 1 }
+
+        val currentVersionName = try {
+            packageManager.getPackageInfo(packageName, 0).versionName ?: "1.0"
+        } catch (_: Exception) { "1.0" }
+
         thread {
             try {
-                // Checking the latest commit on master branch
-                val url = URL("https://api.github.com/repos/Raksab769/LuckyCharm/commits/master")
+                val timeStamp = System.currentTimeMillis()
+                val url = URL("https://raw.githubusercontent.com/Raksab769/LuckyCharm/master/app/build.gradle.kts?nocache=$timeStamp")
                 val connection = url.openConnection() as HttpURLConnection
                 connection.requestMethod = "GET"
-                connection.setRequestProperty("Accept", "application/vnd.github.v3+json")
-                connection.connectTimeout = 5000
-                connection.readTimeout = 5000
+                connection.setRequestProperty("User-Agent", "LuckyCharmApp")
+                connection.connectTimeout = 8000
+                connection.readTimeout = 8000
+                connection.useCaches = false
 
                 if (connection.responseCode == 200) {
-                    val response = connection.inputStream.bufferedReader().readText()
-                    // If we successfully fetch the commit info, we pretend there is an update to show the flow
+                    val gradleContent = connection.inputStream.bufferedReader().readText()
+                    val remoteVersionCode = Regex("""versionCode\s*=\s*(\d+)""").find(gradleContent)?.groupValues?.get(1)?.toIntOrNull() ?: currentVersionCode
+                    val remoteVersionName = Regex("""versionName\s*=\s*"([^"]+)"""").find(gradleContent)?.groupValues?.get(1) ?: currentVersionName
+
                     Handler(Looper.getMainLooper()).post {
                         btn.isEnabled = true
                         btn.text = "Check for Updates"
-                        showUpdateDialog()
+                        if (remoteVersionCode > currentVersionCode) {
+                            showUpdateDialog(remoteVersionName)
+                        } else {
+                            Toast.makeText(this@MainActivity, "You are on the latest version ($currentVersionName)!", Toast.LENGTH_LONG).show()
+                        }
                     }
                 } else {
                     Handler(Looper.getMainLooper()).post {
                         btn.isEnabled = true
                         btn.text = "Check for Updates"
-                        Toast.makeText(this@MainActivity, "No new updates found.", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@MainActivity, "Server check failed (${connection.responseCode}). Try again.", Toast.LENGTH_SHORT).show()
                     }
                 }
             } catch (e: Exception) {
                 Handler(Looper.getMainLooper()).post {
                     btn.isEnabled = true
                     btn.text = "Check for Updates"
-                    Toast.makeText(this@MainActivity, "Failed to check for updates.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@MainActivity, "Check failed: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -140,10 +156,10 @@ class MainActivity : AppCompatActivity() {
     
     private var downloadId: Long = -1L
 
-    private fun showUpdateDialog() {
+    private fun showUpdateDialog(newVersionName: String) {
         AlertDialog.Builder(this)
             .setTitle("Update Available")
-            .setMessage("There is a new update available for Lucky Charm! Would you like to download and install it now?")
+            .setMessage("Lucky Charm v$newVersionName is now available! Would you like to download and install it now?")
             .setPositiveButton("Update Now") { _, _ ->
                 downloadAndInstallUpdate()
             }
