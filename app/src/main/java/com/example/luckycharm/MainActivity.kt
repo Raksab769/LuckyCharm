@@ -37,6 +37,7 @@ class MainActivity : AppCompatActivity() {
     private var selectedCharm: CharmType = CharmType.CLOVER
     private var selectedLetter: String? = null
     private var selectedColor: Int? = null
+    private var selectedStringColor: Int? = null
     private var gyroSensitivity: Float = 0.05f
     private var positionRatio: Float = 0.5f
 
@@ -60,6 +61,7 @@ class MainActivity : AppCompatActivity() {
         buildCharmGrid(charmGrid)
         setupSensitivityBar()
         setupColorPalette()
+        setupStringColorPalette()
         setupPositionButtons()
 
         grantButton.setOnClickListener { requestOverlayPermission() }
@@ -195,6 +197,7 @@ class MainActivity : AppCompatActivity() {
                 putExtra(CharmOverlayService.EXTRA_POSITION_RATIO, positionRatio)
                 putExtra(CharmOverlayService.EXTRA_LETTER, selectedLetter)
                 selectedColor?.let { putExtra(CharmOverlayService.EXTRA_COLOR, it) }
+                selectedStringColor?.let { putExtra(CharmOverlayService.EXTRA_STRING_COLOR, it) }
             }
             ContextCompat.startForegroundService(this@MainActivity, updateIntent)
         }
@@ -235,6 +238,25 @@ class MainActivity : AppCompatActivity() {
         }
         findViewById<Button>(R.id.colorGold).setOnClickListener { 
             selectedColor = 0xFFC9962C.toInt(); updateService() 
+        }
+    }
+
+    private fun setupStringColorPalette() {
+        findViewById<Button>(R.id.stringColorDefault).setOnClickListener { 
+            selectedStringColor = null; updateService() 
+            Toast.makeText(this, "Default string color", Toast.LENGTH_SHORT).show()
+        }
+        findViewById<Button>(R.id.stringColorGold).setOnClickListener { 
+            selectedStringColor = 0xFFC9962C.toInt(); updateService() 
+        }
+        findViewById<Button>(R.id.stringColorBlack).setOnClickListener { 
+            selectedStringColor = 0xFF1A1A1A.toInt(); updateService() 
+        }
+        findViewById<Button>(R.id.stringColorRed).setOnClickListener { 
+            selectedStringColor = 0xFFE63946.toInt(); updateService() 
+        }
+        findViewById<Button>(R.id.stringColorBlue).setOnClickListener { 
+            selectedStringColor = 0xFF4EA8DE.toInt(); updateService() 
         }
     }
 

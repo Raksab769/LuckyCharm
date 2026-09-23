@@ -111,6 +111,29 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
+        android:text="String Color (Optional)"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:id="@+id/stringColorPalette"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal">
+
+        <Button android:id="@+id/stringColorDefault" android:layout_width="48dp" android:layout_height="48dp" android:layout_margin="4dp" android:backgroundTint="#AAAAAA" android:text="X"/>
+        <Button android:id="@+id/stringColorGold" android:layout_width="48dp" android:layout_height="48dp" android:layout_margin="4dp" android:backgroundTint="#C9962C"/>
+        <Button android:id="@+id/stringColorBlack" android:layout_width="48dp" android:layout_height="48dp" android:layout_margin="4dp" android:backgroundTint="#1A1A1A"/>
+        <Button android:id="@+id/stringColorRed" android:layout_width="48dp" android:layout_height="48dp" android:layout_margin="4dp" android:backgroundTint="#E63946"/>
+        <Button android:id="@+id/stringColorBlue" android:layout_width="48dp" android:layout_height="48dp" android:layout_margin="4dp" android:backgroundTint="#4EA8DE"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:text="Position"
         android:textStyle="bold" />
 
@@ -123,7 +146,13 @@
 
         <Button android:id="@+id/posLeft" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_margin="4dp" android:text="Left"/>
         <Button android:id="@+id/posCenter" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_margin="4dp" android:text="Center"/>
-        <Button android:id="@+id/posRight" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_margin="4dp" android:text="Right"/>
+
+        <Button
+            android:id="@+id/posRight"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:text="Right" />
     </LinearLayout>
 
     <Button

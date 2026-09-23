@@ -63,6 +63,12 @@ class CharmView(context: Context) : View(context) {
             invalidate()
         }
 
+    var customStringColor: Int? = null
+        set(value) {
+            field = value
+            invalidate()
+        }
+
     var gyroSensitivity: Float = 1.0f
 
     var onRepositioned: ((screenX: Float) -> Unit)? = null
@@ -411,6 +417,7 @@ class CharmView(context: Context) : View(context) {
             path.quadTo(pointsX[i - 1], pointsY[i - 1], midX, midY)
         }
         path.lineTo(pointsX[SEGMENTS], pointsY[SEGMENTS])
+        threadPaint.color = customStringColor ?: Color.parseColor("#AAAAAA")
         canvas.drawPath(path, threadPaint)
 
         // Top anchor peg to visually show where to drag to reposition the string
