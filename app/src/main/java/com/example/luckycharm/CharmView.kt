@@ -110,8 +110,9 @@ class CharmView(context: Context) : View(context) {
 
     private val threadPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = Color.parseColor("#AAAAAA")
-        strokeWidth = 3f
         style = Paint.Style.STROKE
+        strokeCap = Paint.Cap.ROUND
+        strokeJoin = Paint.Join.ROUND
     }
     private val beadPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = Color.parseColor("#D8D8D8")
@@ -417,11 +418,13 @@ class CharmView(context: Context) : View(context) {
             path.quadTo(pointsX[i - 1], pointsY[i - 1], midX, midY)
         }
         path.lineTo(pointsX[SEGMENTS], pointsY[SEGMENTS])
+        val density = resources.displayMetrics.density
+        threadPaint.strokeWidth = 5f * density
         threadPaint.color = customStringColor ?: Color.parseColor("#AAAAAA")
+        beadPaint.color = customStringColor ?: Color.parseColor("#D8D8D8")
         canvas.drawPath(path, threadPaint)
 
         // Top anchor peg to visually show where to drag to reposition the string
-        val density = resources.displayMetrics.density
         val topPegPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.parseColor("#997A22") }
         canvas.drawRect(anchorX - 16f * density, anchorY, anchorX + 16f * density, anchorY + 4f * density, topPegPaint)
         canvas.drawCircle(anchorX, anchorY + 4f * density, 6f * density, beadPaint)

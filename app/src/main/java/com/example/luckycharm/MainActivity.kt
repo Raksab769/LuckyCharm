@@ -88,6 +88,14 @@ class MainActivity : AppCompatActivity() {
         checkUpdatesButton.setOnClickListener {
             checkForUpdates()
         }
+
+        val versionText = findViewById<TextView>(R.id.versionText)
+        try {
+            val pInfo = packageManager.getPackageInfo(packageName, 0)
+            versionText.text = "Version ${pInfo.versionName} (${pInfo.versionCode}) • Developed by Baskar S"
+        } catch (_: Exception) {
+            versionText.text = "Version 1.6 • Developed by Baskar S"
+        }
     }
 
     private fun checkForUpdates() {
