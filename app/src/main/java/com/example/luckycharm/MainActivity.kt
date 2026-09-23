@@ -145,22 +145,27 @@ class MainActivity : AppCompatActivity() {
 
     private fun downloadAndInstallUpdate() {
         Toast.makeText(this, "Downloading update...", Toast.LENGTH_SHORT).show()
-        val apkUrl = "https://raw.githubusercontent.com/Raksab769/LuckyCharm/master/app/release/app-release.apk"
-        
+        val timeStamp = System.currentTimeMillis()
+        val apkUrl = "https://raw.githubusercontent.com/Raksab769/LuckyCharm/master/app/release/app-release.apk?nocache=$timeStamp"
+        val fileName = "LuckyCharm-update-$timeStamp.apk"
+
+        try {
+            val downloadsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+            downloadsDir?.listFiles()?.forEach { f ->
+                if (f.name.startsWith("LuckyCharm-update")) {
+                    try { f.delete() } catch (_: Exception) {}
+                }
+            }
+        } catch (_: Exception) {}
+
         val request = DownloadManager.Request(Uri.parse(apkUrl))
             .setTitle("Lucky Charm Update")
             .setDescription("Downloading latest version")
             .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
             .setMimeType("application/vnd.android.package-archive")
-            .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "LuckyCharm-update.apk")
+            .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName)
 
         val downloadManager = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
-        
-        // Remove previous downloaded file if exists to prevent rename conflicts
-        val file =
-            File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "LuckyCharm-update.apk")
-        if (file.exists()) file.delete()
-
         downloadId = downloadManager.enqueue(request)
 
         val receiver = object : BroadcastReceiver() {
@@ -181,7 +186,7 @@ class MainActivity : AppCompatActivity() {
                     } else {
                         Toast.makeText(context, "Download failed.", Toast.LENGTH_SHORT).show()
                     }
-                    context.unregisterReceiver(this)
+                    try { context.unregisterReceiver(this) } catch (_: Exception) {}
                 }
             }
         }
