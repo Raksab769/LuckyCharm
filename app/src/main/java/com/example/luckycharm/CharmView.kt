@@ -419,7 +419,7 @@ class CharmView(context: Context) : View(context) {
         }
         path.lineTo(pointsX[SEGMENTS], pointsY[SEGMENTS])
         val density = resources.displayMetrics.density
-        threadPaint.strokeWidth = 5f * density
+        threadPaint.strokeWidth = 2.5f * density
         threadPaint.color = customStringColor ?: Color.parseColor("#AAAAAA")
         beadPaint.color = customStringColor ?: Color.parseColor("#D8D8D8")
         canvas.drawPath(path, threadPaint)

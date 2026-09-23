@@ -2,14 +2,14 @@
     <style name="Theme.LuckyCharm" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="colorPrimary">@color/purple_500</item>
         <item name="colorSecondary">@color/cyan_500</item>
-        <item name="android:windowBackground">@color/bg_light</item>
-        <item name="android:textColorPrimary">@color/text_primary_light</item>
-        <item name="android:textColorSecondary">@color/text_secondary_light</item>
+        <item name="android:windowBackground">@color/bg_dark</item>
+        <item name="android:textColorPrimary">@color/text_primary_dark</item>
+        <item name="android:textColorSecondary">@color/text_secondary_dark</item>
         <item name="dialogTheme">@style/Theme.LuckyCharm.Dialog</item>
     </style>
 
     <style name="Theme.LuckyCharm.Dialog" parent="ThemeOverlay.MaterialComponents.Dialog.Alert">
-        <item name="android:windowBackground">@color/bg_light</item>
-        <item name="android:textColorPrimary">@color/text_primary_light</item>
+        <item name="android:windowBackground">@color/bg_dark</item>
+        <item name="android:textColorPrimary">@color/text_primary_dark</item>
     </style>
 </resources>
