@@ -282,16 +282,24 @@ class MainActivity : AppCompatActivity() {
     ) {
         val view = layoutInflater.inflate(R.layout.dialog_color_picker, null)
         val colorPickerView = view.findViewById<ColorWheelPickerView>(R.id.colorWheelPicker)
+        val swatchView = view.findViewById<View>(R.id.colorPreviewSwatch)
         val hexText = view.findViewById<TextView>(R.id.colorHexText)
 
         colorPickerView.color = initialColor
-        hexText.text = String.format("#%06X", 0xFFFFFF and colorPickerView.color)
-        hexText.setTextColor(colorPickerView.color)
+
+        val updateDialogPreview = { c: Int ->
+            swatchView.setBackgroundColor(c)
+            hexText.text = String.format("#%06X", 0xFFFFFF and c)
+        }
+
+        updateDialogPreview(colorPickerView.color)
 
         colorPickerView.onColorChanged = { newColor ->
-            hexText.text = String.format("#%06X", 0xFFFFFF and newColor)
-            hexText.setTextColor(newColor)
+            updateDialogPreview(newColor)
+            onColorSelected(newColor)
         }
+
+        val originalColor = initialColor
 
         AlertDialog.Builder(this)
             .setTitle(title)
@@ -299,7 +307,12 @@ class MainActivity : AppCompatActivity() {
             .setPositiveButton("Apply") { _, _ ->
                 onColorSelected(colorPickerView.color)
             }
-            .setNegativeButton("Cancel", null)
+            .setNegativeButton("Cancel") { _, _ ->
+                onColorSelected(originalColor)
+            }
+            .setOnCancelListener {
+                onColorSelected(originalColor)
+            }
             .show()
     }
 
