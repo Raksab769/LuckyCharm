@@ -19,7 +19,8 @@
         android:layout_marginTop="32dp"
         android:text="@string/app_name"
         android:textSize="28sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:textColor="?android:attr/textColorPrimary" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -28,7 +29,7 @@
         android:layout_marginBottom="24dp"
         android:text="@string/subtitle"
         android:textSize="14sp"
-        android:alpha="0.7" />
+        android:textColor="?android:attr/textColorSecondary" />
 
     <TextView
         android:id="@+id/statusText"
@@ -36,13 +37,17 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
         android:text="@string/status_permission_needed"
-        android:textAlignment="center" />
+        android:textAlignment="center"
+        android:textColor="?android:attr/textColorPrimary" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/grantPermissionButton"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/grant_permission" />
+        android:layout_height="52dp"
+        android:text="@string/grant_permission"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold"
+        android:background="@drawable/bg_neon_gold" />
 
     <GridLayout
         android:id="@+id/charmGrid"
@@ -55,14 +60,15 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="20dp"
         android:orientation="horizontal"
         android:gravity="bottom">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Sensitivity"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:textColor="?android:attr/textColorPrimary" />
         <View
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -73,7 +79,7 @@
             android:layout_height="wrap_content"
             android:text="5%"
             android:textSize="12sp"
-            android:alpha="0.7" />
+            android:textColor="?android:attr/textColorSecondary" />
     </LinearLayout>
 
     <SeekBar
@@ -88,9 +94,10 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="20dp"
         android:text="Charm Color"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:textColor="?android:attr/textColorPrimary" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -101,25 +108,31 @@
 
         <View
             android:id="@+id/charmColorPreview"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
             android:layout_marginEnd="12dp"
-            android:background="#3FA34D" />
+            android:background="@drawable/bg_circle_preview" />
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnPickCharmColor"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
             android:layout_weight="1"
-            android:text="Pick Charm Color" />
+            android:text="Pick Charm Color"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:background="@drawable/bg_neon_purple" />
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnResetCharmColor"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
             android:layout_marginStart="8dp"
+            android:paddingHorizontal="16dp"
             android:text="Reset"
-            style="?android:attr/borderlessButtonStyle" />
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:background="@drawable/bg_neon_subtle" />
 
     </LinearLayout>
 
@@ -127,9 +140,10 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="20dp"
         android:text="String Color"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:textColor="?android:attr/textColorPrimary" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -140,34 +154,41 @@
 
         <View
             android:id="@+id/stringColorPreview"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
             android:layout_marginEnd="12dp"
-            android:background="#AAAAAA" />
+            android:background="@drawable/bg_circle_preview" />
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnPickStringColor"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
             android:layout_weight="1"
-            android:text="Pick String Color" />
+            android:text="Pick String Color"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:background="@drawable/bg_neon_cyan" />
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnResetStringColor"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
             android:layout_marginStart="8dp"
+            android:paddingHorizontal="16dp"
             android:text="Reset"
-            style="?android:attr/borderlessButtonStyle" />
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:background="@drawable/bg_neon_subtle" />
 
     </LinearLayout>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="20dp"
         android:text="Position"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:textColor="?android:attr/textColorPrimary" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -176,40 +197,72 @@
         android:orientation="horizontal"
         android:gravity="center_horizontal">
 
-        <Button android:id="@+id/posLeft" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_margin="4dp" android:text="Left"/>
-        <Button android:id="@+id/posCenter" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_margin="4dp" android:text="Center"/>
-
-        <Button
-            android:id="@+id/posRight"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/posLeft"
+            android:layout_width="0dp"
+            android:layout_height="44dp"
+            android:layout_weight="1"
             android:layout_margin="4dp"
-            android:text="Right" />
+            android:text="Left"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:background="@drawable/bg_neon_subtle" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/posCenter"
+            android:layout_width="0dp"
+            android:layout_height="44dp"
+            android:layout_weight="1"
+            android:layout_margin="4dp"
+            android:text="Center"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:background="@drawable/bg_neon_subtle" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/posRight"
+            android:layout_width="0dp"
+            android:layout_height="44dp"
+            android:layout_weight="1"
+            android:layout_margin="4dp"
+            android:text="Right"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:background="@drawable/bg_neon_subtle" />
+
     </LinearLayout>
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/hangButton"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_height="54dp"
+        android:layout_marginTop="28dp"
         android:text="@string/hang_charm"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:background="@drawable/bg_neon_green"
         android:enabled="false" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/hideButton"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="@string/hide_charm" />
+        android:layout_height="50dp"
+        android:layout_marginTop="12dp"
+        android:text="@string/hide_charm"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold"
+        android:background="@drawable/bg_neon_red" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnCheckUpdates"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="12dp"
         android:text="Check for Updates"
-        style="?android:attr/borderlessButtonStyle"
-        android:textColor="#4EA8DE" />
+        android:textColor="#FFFFFF"
+        android:textStyle="bold"
+        android:background="@drawable/bg_neon_cyan" />
 
     <Space
         android:layout_width="match_parent"
@@ -225,7 +278,7 @@
         android:text="Developed by Baskar S"
         android:textSize="16sp"
         android:textStyle="bold|italic"
-        android:textColor="#888888" />
+        android:textColor="?android:attr/textColorSecondary" />
 
     </LinearLayout>
 </ScrollView>

@@ -23,6 +23,13 @@ import android.os.Looper
 import android.text.InputFilter
 import android.view.View
 import android.widget.EditText
+import android.graphics.Color
+import android.graphics.Typeface
+import android.graphics.drawable.GradientDrawable
+import android.graphics.drawable.RippleDrawable
+import android.content.res.ColorStateList
+import android.content.res.Configuration
+import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -333,15 +340,35 @@ class MainActivity : AppCompatActivity() {
         refreshPermissionStatus()
     }
 
+    private fun View.setNeonStyle(strokeColor: Int) {
+        val density = resources.displayMetrics.density
+        val cornerRadiusPx = 100f * density
+        val strokeWidthPx = (2.5f * density).toInt()
+
+        val shape = GradientDrawable().apply {
+            shape = GradientDrawable.RECTANGLE
+            cornerRadius = cornerRadiusPx
+            setColor(Color.parseColor("#1A182B"))
+            setStroke(strokeWidthPx, strokeColor)
+        }
+
+        val rippleColor = ColorStateList.valueOf((strokeColor and 0x00FFFFFF) or 0x40000000)
+        background = RippleDrawable(rippleColor, shape, null)
+    }
+
     private fun buildCharmGrid(grid: GridLayout) {
+        grid.removeAllViews()
         CharmType.entries.forEach { charm ->
-            val button = Button(this).apply {
+            val button = AppCompatButton(this).apply {
                 text = charm.displayName
-                setBackgroundColor(charm.baseColor)
-                setTextColor(0xFFFFFFFF.toInt())
+                textSize = 12f
+                isAllCaps = false
+                setTypeface(null, Typeface.BOLD)
+                setNeonStyle(charm.baseColor)
+                setTextColor(Color.WHITE)
                 val params = GridLayout.LayoutParams().apply {
                     width = 0
-                    height = GridLayout.LayoutParams.WRAP_CONTENT
+                    height = (48f * resources.displayMetrics.density).toInt()
                     columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f)
                     setMargins(8, 8, 8, 8)
                 }
@@ -363,10 +390,15 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showAlphabetDialog(charm: CharmType) {
-        val input = EditText(this)
-        input.filters = arrayOf(InputFilter.LengthFilter(1))
-        input.isSingleLine = true
-        input.textAlignment = View.TEXT_ALIGNMENT_CENTER
+        val input = EditText(this).apply {
+            filters = arrayOf(InputFilter.LengthFilter(1))
+            isSingleLine = true
+            textAlignment = View.TEXT_ALIGNMENT_CENTER
+            textSize = 28f
+            setTypeface(null, Typeface.BOLD)
+            val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+            setTextColor(if (isDark) Color.WHITE else Color.BLACK)
+        }
 
         AlertDialog.Builder(this)
             .setTitle("Choose a Letter")

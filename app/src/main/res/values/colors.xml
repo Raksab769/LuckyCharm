@@ -1,4 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="purple_500">#6C63FF</color>
-    <color name="background_light">#FBF9F4</color>
+    <color name="cyan_500">#4EA8DE</color>
+    <color name="green_500">#3FA34D</color>
+    <color name="bg_dark">#121020</color>
+    <color name="bg_light">#F8F9FA</color>
+    <color name="text_primary_light">#1A1A1A</color>
+    <color name="text_secondary_light">#555555</color>
+    <color name="text_primary_dark">#FFFFFF</color>
+    <color name="text_secondary_dark">#CCCCCC</color>
 </resources>
