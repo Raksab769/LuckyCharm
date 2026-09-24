@@ -69,6 +69,16 @@ class CharmView(context: Context) : View(context) {
             invalidate()
         }
 
+    var customPhotoPath: String? = null
+        set(value) {
+            field = value
+            if (value != null) {
+                val d = Drawable.createFromPath(value)
+                if (d != null) drawableCache[-1] = d
+            }
+            invalidate()
+        }
+
     var gyroSensitivity: Float = 1.0f
 
     var onRepositioned: ((screenX: Float) -> Unit)? = null
@@ -198,6 +208,9 @@ class CharmView(context: Context) : View(context) {
     private val drawableCache = mutableMapOf<Int, Drawable>()
 
     private fun getDrawableForCharm(charm: CharmType): Drawable? {
+        if (charm == CharmType.CUSTOM_PHOTO && customPhotoPath != null) {
+            return drawableCache[-1] ?: Drawable.createFromPath(customPhotoPath!!)?.also { drawableCache[-1] = it }
+        }
         val resId = charm.drawableRes ?: return null
         return drawableCache.getOrPut(resId) {
             ContextCompat.getDrawable(context, resId)!!

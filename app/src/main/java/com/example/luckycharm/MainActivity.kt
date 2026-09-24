@@ -38,6 +38,7 @@ import java.io.File
 import java.net.HttpURLConnection
 import java.net.URL
 import kotlin.concurrent.thread
+import androidx.activity.result.contract.ActivityResultContracts
 
 class MainActivity : AppCompatActivity() {
 
@@ -48,6 +49,7 @@ class MainActivity : AppCompatActivity() {
     private var gyroSensitivity: Float = 0.05f
     private var positionRatio: Float = 0.5f
     private var isHanging = false
+    private var customPhotoPath: String? = null
 
     private lateinit var statusText: TextView
     private lateinit var hangButton: Button
@@ -238,6 +240,7 @@ class MainActivity : AppCompatActivity() {
                 putExtra(CharmOverlayService.EXTRA_SENSITIVITY, gyroSensitivity)
                 putExtra(CharmOverlayService.EXTRA_POSITION_RATIO, positionRatio)
                 putExtra(CharmOverlayService.EXTRA_LETTER, selectedLetter)
+                putExtra(CharmOverlayService.EXTRA_CUSTOM_PHOTO_PATH, customPhotoPath)
                 selectedColor?.let { putExtra(CharmOverlayService.EXTRA_COLOR, it) }
                 selectedStringColor?.let { putExtra(CharmOverlayService.EXTRA_STRING_COLOR, it) }
             }
@@ -400,16 +403,39 @@ class MainActivity : AppCompatActivity() {
                 setOnClickListener {
                     if (charm == CharmType.ALPHABET) {
                         showAlphabetDialog(charm)
+                    } else if (charm == CharmType.CUSTOM_PHOTO) {
+                        pickImageLauncher.launch("image/*")
                     } else {
                         selectedCharm = charm
                         selectedLetter = null
                         updateColorPreviews()
                         Toast.makeText(context, "${charm.displayName} selected", Toast.LENGTH_SHORT).show()
-                        updateService()
+                        if (isHanging) updateService()
                     }
                 }
             }
             grid.addView(button)
+        }
+    }
+
+    private val pickImageLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+        uri?.let {
+            try {
+                val file = File(filesDir, "custom_charm.png")
+                contentResolver.openInputStream(it)?.use { input ->
+                    file.outputStream().use { output ->
+                        input.copyTo(output)
+                    }
+                }
+                selectedCharm = CharmType.CUSTOM_PHOTO
+                selectedLetter = null
+                customPhotoPath = file.absolutePath
+                updateColorPreviews()
+                Toast.makeText(this, "Custom photo loaded!", Toast.LENGTH_SHORT).show()
+                if (isHanging) updateService()
+            } catch (e: Exception) {
+                Toast.makeText(this, "Failed to load image", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
