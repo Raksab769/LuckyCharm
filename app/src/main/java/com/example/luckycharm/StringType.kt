@@ -19,7 +19,9 @@ enum class StringType(val displayName: String, val defaultColor: Int) {
     PEARL("Pearl Necklace", Color.parseColor("#FDFAF5")),
     NEON_WIRE("Neon Wire", Color.parseColor("#00E5FF")),
     VINE("Nature Vine", Color.parseColor("#43A047")),
-    DIAMOND("Diamond", Color.parseColor("#E0E0E0"));
+    DIAMOND("Diamond", Color.parseColor("#E0E0E0")),
+    TINY_HEARTS("Tiny Hearts", Color.parseColor("#E91E63")),
+    LINE_PATTERN("Line Pattern", Color.parseColor("#FF9800"));
 
     fun draw(
         canvas: Canvas,
@@ -205,7 +207,60 @@ enum class StringType(val displayName: String, val defaultColor: Int) {
                     canvas.drawCircle(cx, cy, 1f * density, highlight)
                 }
             }
+            TINY_HEARTS -> {
+                paint.strokeWidth = 1.0f * density
+                canvas.drawPath(path, paint)
+                
+                paint.style = Paint.Style.FILL
+                for (i in 1..segments) {
+                    drawHeart(canvas, paint, pointsX[i], pointsY[i], 4.5f * density)
+                }
+            }
+            LINE_PATTERN -> {
+                paint.style = Paint.Style.STROKE
+                paint.strokeWidth = 3f * density
+                
+                for (i in 1..segments) {
+                    val cx = (pointsX[i] + pointsX[i-1]) / 2f
+                    val cy = (pointsY[i] + pointsY[i-1]) / 2f
+                    val dx = pointsX[i] - pointsX[i-1]
+                    val dy = pointsY[i] - pointsY[i-1]
+                    val angle = Math.toDegrees(atan2(dy.toDouble(), dx.toDouble())).toFloat()
+                    
+                    canvas.save()
+                    canvas.translate(cx, cy)
+                    canvas.rotate(angle)
+                    
+                    // Draw dashed segments
+                    canvas.drawLine(-6f * density, 0f, -2f * density, 0f, paint)
+                    canvas.drawLine(2f * density, 0f, 6f * density, 0f, paint)
+                    
+                    // Draw a dot in the middle
+                    paint.style = Paint.Style.FILL
+                    canvas.drawCircle(0f, 0f, 1.5f * density, paint)
+                    paint.style = Paint.Style.STROKE
+                    
+                    canvas.restore()
+                }
+            }
         }
+    }
+
+    private fun drawHeart(canvas: Canvas, paint: Paint, cx: Float, cy: Float, r: Float) {
+        val path = Path()
+        path.moveTo(cx, cy + r * 0.8f)
+        path.cubicTo(
+            cx - r * 1.5f, cy,
+            cx - r * 1.0f, cy - r * 1.0f,
+            cx, cy - r * 0.2f
+        )
+        path.cubicTo(
+            cx + r * 1.0f, cy - r * 1.0f,
+            cx + r * 1.5f, cy,
+            cx, cy + r * 0.8f
+        )
+        path.close()
+        canvas.drawPath(path, paint)
     }
 
     private fun drawStar(canvas: Canvas, paint: Paint, cx: Float, cy: Float, r: Float) {

@@ -136,6 +136,7 @@ class CharmView(context: Context) : View(context) {
     private val charmPaint = Paint(Paint.ANTI_ALIAS_FLAG)
 
     private var windAccelX = 0f
+    private var worldGravityY = GRAVITY
 
     private val sensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
     private val gravitySensor = sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY)
@@ -150,7 +151,18 @@ class CharmView(context: Context) : View(context) {
                         // Apply gravity directly by shifting the wind/accel physics 
                         // x value goes from roughly -9.8 to 9.8. Multiply for strong visual impact.
                         val xGravity = event.values[0]
+                        val yGravity = event.values[1]
+                        
                         windAccelX = (-xGravity * 400f * gyroSensitivity)
+                        
+                        // Scale Y-axis gravity based on device tilt, so it physically hangs "down"
+                        // even when the phone is held upside down!
+                        worldGravityY = (yGravity / 9.8f) * GRAVITY
+                        
+                        // Limit minimum gravity to prevent it floating infinitely or exploding
+                        if (abs(worldGravityY) < GRAVITY * 0.1f) {
+                            worldGravityY = GRAVITY * 0.1f * (if (worldGravityY >= 0) 1f else -1f)
+                        }
                     }
                 }
                 Sensor.TYPE_GYROSCOPE -> {
@@ -274,7 +286,7 @@ class CharmView(context: Context) : View(context) {
             prevY[i] = pointsY[i]
             
             // Soften gravity and disable wind while dragging so it hangs neatly
-            val appliedGravity = if (mode == Mode.DRAGGING_CHARM) GRAVITY * 0.4f else GRAVITY
+            val appliedGravity = if (mode == Mode.DRAGGING_CHARM) worldGravityY * 0.4f else worldGravityY
             val appliedWind = if (mode == Mode.DRAGGING_CHARM) 0f else windAccelX
 
             pointsX[i] += vx + appliedWind * dt * dt
@@ -352,7 +364,7 @@ class CharmView(context: Context) : View(context) {
                     }
                     Mode.DRAGGING_CHARM -> {
                         // Max out the rope length but allow a tiny bit of "bungee" stretch so pulling down feels tangible
-                        val maxLen = segmentLength * SEGMENTS * 1.0f
+                        val maxLen = segmentLength * SEGMENTS * 1.35f
                         val dx = x - anchorX
                         val dy = y - anchorY
                         val dist = hypot(dx, dy)
