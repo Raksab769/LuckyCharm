@@ -66,8 +66,10 @@ class MainActivity : AppCompatActivity() {
         val grantButton = findViewById<Button>(R.id.grantPermissionButton)
         val checkUpdatesButton = findViewById<Button>(R.id.btnCheckUpdates)
         val charmGrid = findViewById<GridLayout>(R.id.charmGrid)
+        val stringGrid = findViewById<GridLayout>(R.id.stringGrid)
 
         buildCharmGrid(charmGrid)
+        buildStringGrid(stringGrid)
         setupSensitivityBar()
         setupColorPickers()
         setupPositionButtons()
@@ -241,6 +243,7 @@ class MainActivity : AppCompatActivity() {
                 putExtra(CharmOverlayService.EXTRA_POSITION_RATIO, positionRatio)
                 putExtra(CharmOverlayService.EXTRA_LETTER, selectedLetter)
                 putExtra(CharmOverlayService.EXTRA_CUSTOM_PHOTO_PATH, customPhotoPath)
+                putExtra(CharmOverlayService.EXTRA_STRING_TYPE, selectedStringType.name)
                 selectedColor?.let { putExtra(CharmOverlayService.EXTRA_COLOR, it) }
                 selectedStringColor?.let { putExtra(CharmOverlayService.EXTRA_STRING_COLOR, it) }
             }
@@ -412,6 +415,36 @@ class MainActivity : AppCompatActivity() {
                         Toast.makeText(context, "${charm.displayName} selected", Toast.LENGTH_SHORT).show()
                         if (isHanging) updateService()
                     }
+                }
+            }
+            grid.addView(button)
+        }
+    }
+
+    private var selectedStringType: StringType = StringType.BASIC
+
+    private fun buildStringGrid(grid: GridLayout) {
+        grid.removeAllViews()
+        StringType.entries.forEach { sType ->
+            val button = AppCompatButton(this).apply {
+                text = sType.displayName
+                textSize = 10f
+                isAllCaps = false
+                setTypeface(null, Typeface.BOLD)
+                setNeonStyle(sType.defaultColor)
+                setTextColor(Color.WHITE)
+                val params = GridLayout.LayoutParams().apply {
+                    width = 0
+                    height = (48f * resources.displayMetrics.density).toInt()
+                    columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f)
+                    setMargins(8, 8, 8, 8)
+                }
+                layoutParams = params
+                setOnClickListener {
+                    selectedStringType = sType
+                    updateColorPreviews()
+                    Toast.makeText(context, "${sType.displayName} selected", Toast.LENGTH_SHORT).show()
+                    if (isHanging) updateService()
                 }
             }
             grid.addView(button)

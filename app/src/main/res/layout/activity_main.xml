@@ -119,6 +119,33 @@
 
         </LinearLayout>
 
+        <!-- Card 1.5: Choose String Style -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/bg_card_dark">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:text="CHOOSE STRING STYLE"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.1"
+                android:textColor="#E63946" />
+
+            <GridLayout
+                android:id="@+id/stringGrid"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:columnCount="3" />
+
+        </LinearLayout>
+
         <!-- Card 2: Customization & Appearance -->
         <LinearLayout
             android:layout_width="match_parent"

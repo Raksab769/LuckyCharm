@@ -63,6 +63,12 @@ class CharmView(context: Context) : View(context) {
             invalidate()
         }
 
+    var stringType: StringType = StringType.BASIC
+        set(value) {
+            field = value
+            invalidate()
+        }
+
     var customStringColor: Int? = null
         set(value) {
             field = value
@@ -431,21 +437,15 @@ class CharmView(context: Context) : View(context) {
             path.quadTo(pointsX[i - 1], pointsY[i - 1], midX, midY)
         }
         path.lineTo(pointsX[SEGMENTS], pointsY[SEGMENTS])
+        
         val density = resources.displayMetrics.density
-        threadPaint.strokeWidth = 2.0f * density
-        threadPaint.color = customStringColor ?: Color.parseColor("#AAAAAA")
-        beadPaint.color = customStringColor ?: Color.parseColor("#D8D8D8")
-        canvas.drawPath(path, threadPaint)
+        stringType.draw(canvas, threadPaint, path, pointsX, pointsY, SEGMENTS, customStringColor, density)
 
         // Top anchor peg to visually show where to drag to reposition the string
         val topPegPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.parseColor("#997A22") }
         canvas.drawRect(anchorX - 16f * density, anchorY, anchorX + 16f * density, anchorY + 4f * density, topPegPaint)
         canvas.drawCircle(anchorX, anchorY + 4f * density, 6f * density, beadPaint)
         canvas.drawCircle(anchorX, anchorY + 4f * density, 3f * density, topPegPaint)
-
-        // A couple of small decorative beads along the thread
-        canvas.drawCircle(pointsX[SEGMENTS - 3], pointsY[SEGMENTS - 3], 5f, beadPaint)
-        canvas.drawCircle(pointsX[SEGMENTS - 2], pointsY[SEGMENTS - 2], 4f, beadPaint)
 
         val customDrawable = getDrawableForCharm(charm)
         charm.draw(canvas, charmPaint, pointsX[SEGMENTS], pointsY[SEGMENTS], charmRadius, ritualProgress, customColor, customLetter, customDrawable)
