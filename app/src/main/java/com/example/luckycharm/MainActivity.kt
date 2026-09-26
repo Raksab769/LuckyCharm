@@ -191,6 +191,7 @@ class MainActivity : AppCompatActivity() {
             .setDescription("Downloading latest version")
             .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
             .setMimeType("application/vnd.android.package-archive")
+            .addRequestHeader("User-Agent", "LuckyCharmApp")
             .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName)
 
         val downloadManager = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
