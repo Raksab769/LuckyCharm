@@ -82,7 +82,7 @@ class MainActivity : AppCompatActivity() {
             if (!isHanging) {
                 updateService()
                 isHanging = true
-                hangButton.text = "🔴 REMOVE CHARM"
+                hangButton.text = "REMOVE CHARM"
                 hangButton.setBackgroundResource(R.drawable.bg_neon_red)
                 Toast.makeText(this, "${selectedCharm.displayName} is hanging up top!", Toast.LENGTH_SHORT).show()
             } else {
@@ -91,8 +91,8 @@ class MainActivity : AppCompatActivity() {
                 }
                 startService(intent)
                 isHanging = false
-                hangButton.text = "✨ HANG CHARM"
-                hangButton.setBackgroundResource(R.drawable.bg_neon_green)
+                hangButton.text = "HANG CHARM"
+                hangButton.setBackgroundResource(R.drawable.bg_primary_button)
                 Toast.makeText(this, "Charm removed", Toast.LENGTH_SHORT).show()
             }
         }
