@@ -1,373 +1,390 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true"
-    android:background="@color/bg_dark">
+    android:background="?android:attr/windowBackground">
+
+    <!-- Top Bar -->
+    <LinearLayout
+        android:id="@+id/topBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingHorizontal="24dp"
+        android:paddingTop="32dp"
+        android:paddingBottom="16dp"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/app_name"
+                android:textColor="?android:attr/textColorPrimary"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/subtitle"
+                android:textColor="?android:attr/textColorSecondary"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnCheckUpdates"
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/bg_outline_button"
+            android:paddingHorizontal="16dp"
+            android:text="Updates"
+            android:textAllCaps="false"
+            android:textColor="?android:attr/textColorPrimary"
+            android:textSize="12sp" />
+    </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/permissionCard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="20dp"
-        android:gravity="center_horizontal">
+        android:layout_marginHorizontal="24dp"
+        android:padding="12dp"
+        android:background="@drawable/bg_panel"
+        app:layout_constraintTop_toBottomOf="@id/topBar"
+        android:visibility="gone">
 
-        <!-- Top Header Bar -->
-        <RelativeLayout
+        <TextView
+            android:id="@+id/statusText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="16dp">
+            android:text="@string/status_permission_needed"
+            android:textAlignment="center"
+            android:textSize="12sp"
+            android:textColor="#FFCC00"
+            android:layout_marginBottom="8dp"/>
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_alignParentStart="true"
-                android:layout_centerVertical="true">
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/grantPermissionButton"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_primary_button"
+            android:text="@string/grant_permission"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold" />
+    </LinearLayout>
 
-                <TextView
-                    android:id="@+id/titleText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/app_name"
-                    android:textSize="26sp"
-                    android:textStyle="bold"
-                    android:textColor="#FFFFFF" />
+    <!-- Navigation Tabs -->
+    <LinearLayout
+        android:id="@+id/tabsContainer"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="8dp"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/permissionCard">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/subtitle"
-                    android:textSize="13sp"
-                    android:textColor="#AAAAAA" />
-
-            </LinearLayout>
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btnCheckUpdates"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:paddingHorizontal="16dp"
-                android:text="Updates 🔄"
-                android:textSize="12sp"
-                android:textColor="#FFFFFF"
-                android:textStyle="bold"
-                android:background="@drawable/bg_neon_cyan" />
-
-        </RelativeLayout>
-
-        <!-- Conditional Permission Banner Card -->
         <LinearLayout
-            android:id="@+id/permissionCard"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp"
-            android:layout_marginBottom="16dp"
-            android:background="@drawable/bg_card_dark">
-
+            android:id="@+id/tabCharms"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
             <TextView
-                android:id="@+id/statusText"
-                android:layout_width="match_parent"
+                android:id="@+id/tabCharmsText"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                android:text="@string/status_permission_needed"
-                android:textAlignment="center"
+                android:text="Charms"
+                android:textColor="?attr/colorPrimary"
                 android:textSize="14sp"
-                android:textColor="#FFCC00" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/grantPermissionButton"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:text="@string/grant_permission"
-                android:textColor="#FFFFFF"
-                android:textStyle="bold"
-                android:background="@drawable/bg_neon_gold" />
-
+                android:textStyle="bold" />
         </LinearLayout>
 
-        <!-- Card 1: Choose Charm -->
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp"
-            android:layout_marginBottom="16dp"
-            android:background="@drawable/bg_card_dark">
-
+            android:id="@+id/tabStrings"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
             <TextView
+                android:id="@+id/tabStringsText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                android:text="CHOOSE CHARM"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                android:letterSpacing="0.1"
-                android:textColor="#6C63FF" />
+                android:text="Strings"
+                android:textColor="?android:attr/textColorSecondary"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+        </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/tabMotion"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/tabMotionText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Motion"
+                android:textColor="?android:attr/textColorSecondary"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <View
+        android:id="@+id/tabIndicatorLine"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginHorizontal="24dp"
+        android:background="?attr/colorOutline"
+        app:layout_constraintTop_toBottomOf="@id/tabsContainer" />
+
+    <View
+        android:id="@+id/tabIndicatorActive"
+        android:layout_width="80dp"
+        android:layout_height="3dp"
+        android:background="@drawable/bg_indicator"
+        app:layout_constraintBottom_toBottomOf="@id/tabIndicatorLine"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/guideline1" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.333333" />
+
+    <!-- Content Area -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:fillViewport="true"
+        app:layout_constraintBottom_toTopOf="@id/hangButton"
+        app:layout_constraintTop_toBottomOf="@id/tabIndicatorLine">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!-- Charms Panel -->
             <GridLayout
-                android:id="@+id/charmGrid"
+                android:id="@+id/charmsPanel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:columnCount="3"
-                android:rowCount="2" />
+                android:visibility="visible" />
 
-        </LinearLayout>
-
-        <!-- Card 1.5: Choose String Style -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp"
-            android:layout_marginBottom="16dp"
-            android:background="@drawable/bg_card_dark">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                android:text="CHOOSE STRING STYLE"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                android:letterSpacing="0.1"
-                android:textColor="#E63946" />
-
+            <!-- Strings Panel -->
             <GridLayout
-                android:id="@+id/stringGrid"
+                android:id="@+id/stringsPanel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:columnCount="3" />
+                android:columnCount="3"
+                android:visibility="gone" />
 
-        </LinearLayout>
-
-        <!-- Card 2: Customization & Appearance -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp"
-            android:layout_marginBottom="16dp"
-            android:background="@drawable/bg_card_dark">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                android:text="CUSTOMIZATION"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                android:letterSpacing="0.1"
-                android:textColor="#4EA8DE" />
-
-            <!-- Colors Row -->
+            <!-- Motion & Colors Panel -->
             <LinearLayout
+                android:id="@+id/motionPanel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical">
-
-                <!-- Charm Color Swatch Button -->
-                <LinearLayout
-                    android:id="@+id/btnPickCharmColor"
-                    android:layout_width="0dp"
-                    android:layout_height="52dp"
-                    android:layout_weight="1"
-                    android:layout_marginEnd="6dp"
-                    android:orientation="horizontal"
-                    android:gravity="center"
-                    android:paddingHorizontal="12dp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:background="@drawable/bg_neon_purple">
-
-                    <View
-                        android:id="@+id/charmColorPreview"
-                        android:layout_width="28dp"
-                        android:layout_height="28dp"
-                        android:layout_marginEnd="8dp"
-                        android:background="@drawable/bg_circle_preview" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Charm"
-                        android:textSize="13sp"
-                        android:textStyle="bold"
-                        android:textColor="#FFFFFF" />
-
-                </LinearLayout>
-
-                <!-- String Color Swatch Button -->
-                <LinearLayout
-                    android:id="@+id/btnPickStringColor"
-                    android:layout_width="0dp"
-                    android:layout_height="52dp"
-                    android:layout_weight="1"
-                    android:layout_marginStart="6dp"
-                    android:orientation="horizontal"
-                    android:gravity="center"
-                    android:paddingHorizontal="12dp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:background="@drawable/bg_neon_cyan">
-
-                    <View
-                        android:id="@+id/stringColorPreview"
-                        android:layout_width="28dp"
-                        android:layout_height="28dp"
-                        android:layout_marginEnd="8dp"
-                        android:background="@drawable/bg_circle_preview" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="String"
-                        android:textSize="13sp"
-                        android:textStyle="bold"
-                        android:textColor="#FFFFFF" />
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <!-- Position Row -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="8dp"
-                android:text="Position"
-                android:textSize="13sp"
-                android:textColor="#CCCCCC" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/posLeft"
-                    android:layout_width="0dp"
-                    android:layout_height="42dp"
-                    android:layout_weight="1"
-                    android:layout_marginEnd="4dp"
-                    android:text="Left"
-                    android:textSize="12sp"
-                    android:textColor="#FFFFFF"
-                    android:textStyle="bold"
-                    android:background="@drawable/bg_neon_subtle" />
-
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/posCenter"
-                    android:layout_width="0dp"
-                    android:layout_height="42dp"
-                    android:layout_weight="1"
-                    android:layout_marginHorizontal="2dp"
-                    android:text="Center ★"
-                    android:textSize="12sp"
-                    android:textColor="#FFFFFF"
-                    android:textStyle="bold"
-                    android:background="@drawable/bg_neon_purple" />
-
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/posRight"
-                    android:layout_width="0dp"
-                    android:layout_height="42dp"
-                    android:layout_marginStart="4dp"
-                    android:layout_weight="1"
-                    android:text="Right"
-                    android:textColor="#FFFFFF"
-                    android:textSize="12sp"
-                    android:textStyle="bold"
-                    android:background="@drawable/bg_neon_subtle" />
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <!-- Card 3: Physics & Motion -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp"
-            android:layout_marginBottom="20dp"
-            android:background="@drawable/bg_card_dark">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:layout_marginBottom="8dp">
+                android:orientation="vertical"
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="PHYSICS &amp; MOTION"
-                    android:textSize="12sp"
-                    android:textStyle="bold"
-                    android:letterSpacing="0.1"
-                    android:textColor="#3FA34D" />
+                    android:layout_marginBottom="8dp"
+                    android:text="Motion Sensitivity"
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
 
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_weight="1" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="24dp">
+
+                    <SeekBar
+                        android:id="@+id/gyroSensitivityBar"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:max="200"
+                        android:progress="5" />
+
+                    <TextView
+                        android:id="@+id/sensitivityValueText"
+                        android:layout_width="40dp"
+                        android:layout_height="wrap_content"
+                        android:text="5%"
+                        android:textAlignment="viewEnd"
+                        android:textColor="?attr/colorPrimary"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
 
                 <TextView
-                    android:id="@+id/sensitivityValueText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="5%"
-                    android:textSize="13sp"
-                    android:textStyle="bold"
-                    android:textColor="#FFFFFF" />
+                    android:layout_marginBottom="12dp"
+                    android:text="Colors"
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="24dp">
+
+                    <LinearLayout
+                        android:id="@+id/btnPickCharmColor"
+                        android:layout_width="0dp"
+                        android:layout_height="52dp"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="6dp"
+                        android:background="@drawable/bg_panel"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:paddingHorizontal="12dp">
+
+                        <View
+                            android:id="@+id/charmColorPreview"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_marginEnd="8dp"
+                            android:background="@drawable/bg_circle_preview" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Charm"
+                            android:textColor="?android:attr/textColorPrimary"
+                            android:textSize="13sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/btnPickStringColor"
+                        android:layout_width="0dp"
+                        android:layout_height="52dp"
+                        android:layout_weight="1"
+                        android:layout_marginStart="6dp"
+                        android:background="@drawable/bg_panel"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:paddingHorizontal="12dp">
+
+                        <View
+                            android:id="@+id/stringColorPreview"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_marginEnd="8dp"
+                            android:background="@drawable/bg_circle_preview" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="String"
+                            android:textColor="?android:attr/textColorPrimary"
+                            android:textSize="13sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="12dp"
+                    android:text="Hanging Position"
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/posLeft"
+                        android:layout_width="0dp"
+                        android:layout_height="42dp"
+                        android:layout_marginEnd="4dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_panel"
+                        android:text="Left"
+                        android:textAllCaps="false"
+                        android:textColor="?android:attr/textColorPrimary"
+                        android:textSize="13sp" />
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/posCenter"
+                        android:layout_width="0dp"
+                        android:layout_height="42dp"
+                        android:layout_marginHorizontal="2dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_panel_selected"
+                        android:text="Center"
+                        android:textAllCaps="false"
+                        android:textColor="?android:attr/textColorPrimary"
+                        android:textSize="13sp"
+                        android:textStyle="bold" />
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/posRight"
+                        android:layout_width="0dp"
+                        android:layout_height="42dp"
+                        android:layout_marginStart="4dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_panel"
+                        android:text="Right"
+                        android:textAllCaps="false"
+                        android:textColor="?android:attr/textColorPrimary"
+                        android:textSize="13sp" />
+                </LinearLayout>
 
             </LinearLayout>
+        </FrameLayout>
+    </ScrollView>
 
-            <SeekBar
-                android:id="@+id/gyroSensitivityBar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:max="200"
-                android:progress="5" />
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/hangButton"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginBottom="24dp"
+        android:background="@drawable/bg_primary_button"
+        android:text="@string/hang_charm"
+        android:textColor="#FFFFFF"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:letterSpacing="0.1"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
-        </LinearLayout>
-
-        <!-- Smart Action Toggle Button -->
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/hangButton"
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:text="✨ HANG CHARM"
-            android:textColor="#FFFFFF"
-            android:textStyle="bold"
-            android:textSize="16sp"
-            android:background="@drawable/bg_neon_green" />
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
-
-        <!-- Footer -->
-        <TextView
-            android:id="@+id/versionText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="28dp"
-            android:layout_marginBottom="20dp"
-            android:gravity="center"
-            android:text="Version 2.0 (11) • Developed by Baskar S"
-            android:textSize="13sp"
-            android:textColor="#888888" />
-
-    </LinearLayout>
-</ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>

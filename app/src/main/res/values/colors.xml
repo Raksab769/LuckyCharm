@@ -1,12 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="purple_500">#6C63FF</color>
+    <color name="purple_500">#8B5CF6</color>
     <color name="cyan_500">#4EA8DE</color>
     <color name="green_500">#3FA34D</color>
-    <color name="bg_dark">#121020</color>
-    <color name="bg_light">#F8F9FA</color>
-    <color name="text_primary_light">#1A1A1A</color>
-    <color name="text_secondary_light">#555555</color>
+    <color name="gold_500">#FBC02D</color>
+
+    <color name="bg_dark">#12131C</color>
+    <color name="bg_light">#F3F4F6</color>
+
+    <color name="panel_dark">#1E202E</color>
+    <color name="panel_light">#FFFFFF</color>
+
+    <color name="stroke_dark">#2E3245</color>
+    <color name="stroke_light">#E5E7EB</color>
+
     <color name="text_primary_dark">#FFFFFF</color>
-    <color name="text_secondary_dark">#CCCCCC</color>
+    <color name="text_primary_light">#111827</color>
+
+    <color name="text_secondary_dark">#9CA3AF</color>
+    <color name="text_secondary_light">#6B7280</color>
 </resources>

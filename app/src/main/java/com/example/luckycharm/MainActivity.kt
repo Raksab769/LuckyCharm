@@ -65,14 +65,15 @@ class MainActivity : AppCompatActivity() {
         
         val grantButton = findViewById<Button>(R.id.grantPermissionButton)
         val checkUpdatesButton = findViewById<Button>(R.id.btnCheckUpdates)
-        val charmGrid = findViewById<GridLayout>(R.id.charmGrid)
-        val stringGrid = findViewById<GridLayout>(R.id.stringGrid)
+        val charmGrid = findViewById<GridLayout>(R.id.charmsPanel)
+        val stringGrid = findViewById<GridLayout>(R.id.stringsPanel)
 
         buildCharmGrid(charmGrid)
         buildStringGrid(stringGrid)
         setupSensitivityBar()
         setupColorPickers()
         setupPositionButtons()
+        setupTabs()
 
         grantButton.setOnClickListener { requestOverlayPermission() }
 
@@ -98,14 +99,6 @@ class MainActivity : AppCompatActivity() {
         
         checkUpdatesButton.setOnClickListener {
             checkForUpdates()
-        }
-
-        val versionText = findViewById<TextView>(R.id.versionText)
-        try {
-            val pInfo = packageManager.getPackageInfo(packageName, 0)
-            versionText.text = "Version ${pInfo.versionName} (${pInfo.versionCode}) • Developed by Baskar S"
-        } catch (_: Exception) {
-            versionText.text = "Version 1.6 • Developed by Baskar S"
         }
     }
 
@@ -363,6 +356,50 @@ class MainActivity : AppCompatActivity() {
         btnLeft?.setOnClickListener { updatePosButtons(0.08f) }
         btnCenter?.setOnClickListener { updatePosButtons(0.5f) }
         btnRight?.setOnClickListener { updatePosButtons(0.90f) }
+    }
+
+    private fun setupTabs() {
+        val tabCharms = findViewById<View>(R.id.tabCharms)
+        val tabStrings = findViewById<View>(R.id.tabStrings)
+        val tabMotion = findViewById<View>(R.id.tabMotion)
+        
+        val tabCharmsText = findViewById<TextView>(R.id.tabCharmsText)
+        val tabStringsText = findViewById<TextView>(R.id.tabStringsText)
+        val tabMotionText = findViewById<TextView>(R.id.tabMotionText)
+
+        val indicatorActive = findViewById<View>(R.id.tabIndicatorActive)
+        
+        val charmsPanel = findViewById<View>(R.id.charmsPanel)
+        val stringsPanel = findViewById<View>(R.id.stringsPanel)
+        val motionPanel = findViewById<View>(R.id.motionPanel)
+
+        fun selectTab(index: Int) {
+            val primaryColor = ContextCompat.getColor(this, R.color.purple_500)
+            val secondaryColor = ContextCompat.getColor(this, R.color.text_secondary_dark)
+            
+            tabCharmsText?.setTextColor(if (index == 0) primaryColor else secondaryColor)
+            tabStringsText?.setTextColor(if (index == 1) primaryColor else secondaryColor)
+            tabMotionText?.setTextColor(if (index == 2) primaryColor else secondaryColor)
+
+            charmsPanel?.visibility = if (index == 0) View.VISIBLE else View.GONE
+            stringsPanel?.visibility = if (index == 1) View.VISIBLE else View.GONE
+            motionPanel?.visibility = if (index == 2) View.VISIBLE else View.GONE
+
+            indicatorActive?.animate()?.translationX(
+                when (index) {
+                    1 -> indicatorActive.width.toFloat()
+                    2 -> indicatorActive.width.toFloat() * 2
+                    else -> 0f
+                }
+            )?.setDuration(200)?.start()
+        }
+
+        tabCharms?.setOnClickListener { selectTab(0) }
+        tabStrings?.setOnClickListener { selectTab(1) }
+        tabMotion?.setOnClickListener { selectTab(2) }
+        
+        // ensure default state is set
+        indicatorActive?.post { selectTab(0) }
     }
 
     override fun onResume() {

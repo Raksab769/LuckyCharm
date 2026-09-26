@@ -6,6 +6,8 @@
         <item name="android:textColorPrimary">@color/text_primary_dark</item>
         <item name="android:textColorSecondary">@color/text_secondary_dark</item>
         <item name="dialogTheme">@style/Theme.LuckyCharm.Dialog</item>
+        <item name="colorSurface">@color/panel_dark</item>
+        <item name="colorOutline">@color/stroke_dark</item>
     </style>
 
     <style name="Theme.LuckyCharm.Dialog" parent="ThemeOverlay.MaterialComponents.Dialog.Alert">
