@@ -113,19 +113,56 @@ enum class CharmType(
     }
 
     private fun drawButterfly(canvas: Canvas, paint: Paint, cx: Float, cy: Float, r: Float, ritual: Float, customColor: Int?) {
-        val flutter = sin(ritual * 6f * Math.PI.toFloat()) * 0.15f
-        val scaleX = 1f + flutter
+        val time = System.currentTimeMillis() * 0.012f
+        val flapAngle = (cos(time.toDouble() + ritual * 12.0).toFloat() * 0.5f + 0.5f).coerceIn(0.15f, 1f)
 
-        paint.color = customColor ?: Color.parseColor("#FF6B6B")
-        canvas.drawOval(RectF(cx - r * 0.9f * scaleX, cy - r * 0.7f, cx, cy + r * 0.7f), paint)
-        canvas.drawOval(RectF(cx, cy - r * 0.7f, cx + r * 0.9f * scaleX, cy + r * 0.7f), paint)
+        val mainColor = customColor ?: Color.parseColor("#FF6B6B")
+        val accentColor = Color.parseColor("#FFE66D")
+        val bodyColor = Color.parseColor("#2B2D42")
+
+        // Left Wing
+        canvas.save()
+        canvas.scale(flapAngle, 1f, cx, cy)
         
-        paint.color = Color.parseColor("#FFE66D")
-        canvas.drawCircle(cx - r * 0.45f * scaleX, cy, r * 0.25f, paint)
-        canvas.drawCircle(cx + r * 0.45f * scaleX, cy, r * 0.25f, paint)
+        paint.style = Paint.Style.FILL
+        paint.color = mainColor
+        canvas.drawOval(RectF(cx - r * 1.3f, cy - r * 1.1f, cx, cy + r * 0.1f), paint)
+        canvas.drawOval(RectF(cx - r * 1.0f, cy - r * 0.1f, cx, cy + r * 0.9f), paint)
 
-        paint.color = Color.parseColor("#2B2D42")
-        canvas.drawRoundRect(RectF(cx - r * 0.1f, cy - r * 0.8f, cx + r * 0.1f, cy + r * 0.8f), r * 0.05f, r * 0.05f, paint)
+        paint.color = accentColor
+        canvas.drawCircle(cx - r * 0.65f, cy - r * 0.5f, r * 0.25f * flapAngle, paint)
+        canvas.drawCircle(cx - r * 0.5f, cy + r * 0.35f, r * 0.18f * flapAngle, paint)
+        canvas.restore()
+
+        // Right Wing
+        canvas.save()
+        canvas.scale(flapAngle, 1f, cx, cy)
+        
+        paint.style = Paint.Style.FILL
+        paint.color = mainColor
+        canvas.drawOval(RectF(cx, cy - r * 1.1f, cx + r * 1.3f, cy + r * 0.1f), paint)
+        canvas.drawOval(RectF(cx, cy - r * 0.1f, cx + r * 1.0f, cy + r * 0.9f), paint)
+
+        paint.color = accentColor
+        canvas.drawCircle(cx + r * 0.65f, cy - r * 0.5f, r * 0.25f * flapAngle, paint)
+        canvas.drawCircle(cx + r * 0.5f, cy + r * 0.35f, r * 0.18f * flapAngle, paint)
+        canvas.restore()
+
+        // Antennae
+        paint.style = Paint.Style.STROKE
+        paint.strokeWidth = r * 0.08f
+        paint.strokeCap = Paint.Cap.ROUND
+        paint.color = bodyColor
+        canvas.drawLine(cx, cy - r * 0.6f, cx - r * 0.4f, cy - r * 1.2f, paint)
+        canvas.drawLine(cx, cy - r * 0.6f, cx + r * 0.4f, cy - r * 1.2f, paint)
+        canvas.drawCircle(cx - r * 0.4f, cy - r * 1.2f, r * 0.08f, paint)
+        canvas.drawCircle(cx + r * 0.4f, cy - r * 1.2f, r * 0.08f, paint)
+
+        // Body
+        paint.style = Paint.Style.FILL
+        paint.color = bodyColor
+        canvas.drawRoundRect(RectF(cx - r * 0.15f, cy - r * 0.6f, cx + r * 0.15f, cy - r * 0.1f), r * 0.1f, r * 0.1f, paint)
+        canvas.drawRoundRect(RectF(cx - r * 0.12f, cy - r * 0.1f, cx + r * 0.12f, cy + r * 0.8f), r * 0.1f, r * 0.1f, paint)
     }
 
     private fun drawStar(canvas: Canvas, paint: Paint, cx: Float, cy: Float, r: Float, ritual: Float, customColor: Int?) {
