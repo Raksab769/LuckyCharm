@@ -57,7 +57,7 @@ class CharmOverlayService : Service() {
         startForeground(NOTIF_ID, buildNotification())
 
         val charmName = intent?.getStringExtra(EXTRA_CHARM)
-        val charm = CharmType.entries.firstOrNull { it.name == charmName } ?: CharmType.CLOVER
+        val charm = CharmType.entries.firstOrNull { it.name == charmName } ?: CharmType.STAR
         val sensitivity = intent?.getFloatExtra(EXTRA_SENSITIVITY, 1.0f) ?: 1.0f
         val positionRatio = intent?.getFloatExtra(EXTRA_POSITION_RATIO, 0.5f) ?: 0.5f
         val color = if (intent?.hasExtra(EXTRA_COLOR) == true) intent.getIntExtra(EXTRA_COLOR, 0) else null
@@ -246,7 +246,7 @@ class CharmOverlayService : Service() {
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         // Refresh the overlay when the screen rotates (portrait/landscape)
-        val currentCharm = charmView?.charm ?: CharmType.CLOVER
+        val currentCharm = charmView?.charm ?: CharmType.STAR
         val currentSensitivity = charmView?.gyroSensitivity ?: 1.0f
         val currentColor = charmView?.customColor
         val currentStringColor = charmView?.customStringColor

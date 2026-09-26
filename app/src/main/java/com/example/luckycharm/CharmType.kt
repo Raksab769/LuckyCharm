@@ -21,11 +21,11 @@ enum class CharmType(
     val baseColor: Int,
     @DrawableRes val drawableRes: Int? = null
 ) {
-    CLOVER("Four-Leaf Clover", Color.parseColor("#3FA34D")),
+    BUTTERFLY("Flutter Butterfly", Color.parseColor("#FF6B6B")),
+    FLOWER("Cherry Blossom", Color.parseColor("#FF8FAB")),
+    CROWN("Royal Crown", Color.parseColor("#FFD166")),
     STAR("Wishing Star", Color.parseColor("#F5B301")),
-    HORSESHOE("Horseshoe", Color.parseColor("#C9962C")),
     MOONBEAM("Crescent Moon", Color.parseColor("#6C63FF")),
-    LADYBIRD("Ladybird", Color.parseColor("#E63946")),
     LOVE("Love Dangle", Color.parseColor("#E0457B")),
     PUBG_HELMET("Level 3 Helmet", Color.parseColor("#4B5320")),
     PUBG_PAN("Winner Pan", Color.parseColor("#2C2C2C")),
@@ -54,11 +54,11 @@ enum class CharmType(
         }
 
         when (this) {
-            CLOVER -> drawClover(canvas, paint, cx, cy, radius, ritual, customColor)
+            BUTTERFLY -> drawButterfly(canvas, paint, cx, cy, radius, ritual, customColor)
+            FLOWER -> drawFlower(canvas, paint, cx, cy, radius, ritual, customColor)
+            CROWN -> drawCrown(canvas, paint, cx, cy, radius, ritual, customColor)
             STAR -> drawStar(canvas, paint, cx, cy, radius, ritual, customColor)
-            HORSESHOE -> drawHorseshoe(canvas, paint, cx, cy, radius, ritual, customColor)
             MOONBEAM -> drawMoon(canvas, paint, cx, cy, radius, ritual, customColor)
-            LADYBIRD -> drawLadybird(canvas, paint, cx, cy, radius, ritual, customColor)
             LOVE -> drawLove(canvas, paint, cx, cy, radius, ritual, customColor)
             PUBG_HELMET -> drawPubgHelmet(canvas, paint, cx, cy, radius, ritual, customColor)
             PUBG_PAN -> drawPubgPan(canvas, paint, cx, cy, radius, ritual, customColor)
@@ -112,20 +112,20 @@ enum class CharmType(
         canvas.restore() // restore rotation
     }
 
-    private fun drawClover(canvas: Canvas, paint: Paint, cx: Float, cy: Float, r: Float, ritual: Float, customColor: Int?) {
-        val leafR = r * 0.55f
-        val offset = r * 0.5f
-        val glowScale = 1f + ritual * 0.25f
-        val positions = listOf(
-            -offset to -offset, offset to -offset,
-            -offset to offset, offset to offset
-        )
-        for ((dx, dy) in positions) {
-            canvas.drawCircle(cx + dx * glowScale, cy + dy * glowScale, leafR * glowScale, paint)
-        }
-        val stemColor = customColor?.let { darkenColor(it) } ?: Color.parseColor("#2C7A3B")
-        val stemPaint = Paint(paint).apply { color = stemColor }
-        canvas.drawRect(cx - r * 0.06f, cy, cx + r * 0.06f, cy + r * 0.9f, stemPaint)
+    private fun drawButterfly(canvas: Canvas, paint: Paint, cx: Float, cy: Float, r: Float, ritual: Float, customColor: Int?) {
+        val flutter = sin(ritual * 6f * Math.PI.toFloat()) * 0.15f
+        val scaleX = 1f + flutter
+
+        paint.color = customColor ?: Color.parseColor("#FF6B6B")
+        canvas.drawOval(RectF(cx - r * 0.9f * scaleX, cy - r * 0.7f, cx, cy + r * 0.7f), paint)
+        canvas.drawOval(RectF(cx, cy - r * 0.7f, cx + r * 0.9f * scaleX, cy + r * 0.7f), paint)
+        
+        paint.color = Color.parseColor("#FFE66D")
+        canvas.drawCircle(cx - r * 0.45f * scaleX, cy, r * 0.25f, paint)
+        canvas.drawCircle(cx + r * 0.45f * scaleX, cy, r * 0.25f, paint)
+
+        paint.color = Color.parseColor("#2B2D42")
+        canvas.drawRoundRect(RectF(cx - r * 0.1f, cy - r * 0.8f, cx + r * 0.1f, cy + r * 0.8f), r * 0.05f, r * 0.05f, paint)
     }
 
     private fun drawStar(canvas: Canvas, paint: Paint, cx: Float, cy: Float, r: Float, ritual: Float, customColor: Int?) {
@@ -145,22 +145,25 @@ enum class CharmType(
         canvas.drawPath(path, paint)
     }
 
-    private fun drawHorseshoe(canvas: Canvas, paint: Paint, cx: Float, cy: Float, r: Float, ritual: Float, customColor: Int?) {
-        paint.style = Paint.Style.STROKE
-        paint.strokeWidth = r * 0.35f
-        paint.strokeCap = Paint.Cap.ROUND
-        val sweep = 220f + ritual * 40f
-        val rect = RectF(cx - r * 0.7f, cy - r * 0.7f, cx + r * 0.7f, cy + r * 0.7f)
-        canvas.drawArc(rect, 160f, sweep, false, paint)
-        paint.style = Paint.Style.FILL
-        val studColor = customColor?.let { darkenColor(it) } ?: Color.parseColor("#8A6A1E")
-        val studPaint = Paint(paint).apply { color = studColor }
-        for (t in listOf(0.05f, 0.95f)) {
-            val angle = Math.toRadians((160f + sweep * t).toDouble())
-            val x = cx + (r * 0.7f) * cos(angle).toFloat()
-            val y = cy + (r * 0.7f) * sin(angle).toFloat()
-            canvas.drawCircle(x, y, r * 0.08f, studPaint)
+    private fun drawFlower(canvas: Canvas, paint: Paint, cx: Float, cy: Float, r: Float, ritual: Float, customColor: Int?) {
+        val spin = ritual * 2f * Math.PI.toFloat()
+        canvas.save()
+        canvas.rotate(Math.toDegrees(spin.toDouble()).toFloat(), cx, cy)
+
+        paint.color = customColor ?: Color.parseColor("#FF8FAB")
+        val petalR = r * 0.45f
+        val dist = r * 0.45f
+        for (i in 0 until 5) {
+            val angle = (2.0 * Math.PI / 5) * i
+            val px = cx + dist * cos(angle).toFloat()
+            val py = cy + dist * sin(angle).toFloat()
+            canvas.drawCircle(px, py, petalR, paint)
         }
+
+        paint.color = Color.parseColor("#FFB703")
+        canvas.drawCircle(cx, cy, r * 0.35f, paint)
+
+        canvas.restore()
     }
 
     private fun drawMoon(canvas: Canvas, paint: Paint, cx: Float, cy: Float, r: Float, ritual: Float, customColor: Int?) {
@@ -175,16 +178,28 @@ enum class CharmType(
         }
     }
 
-    private fun drawLadybird(canvas: Canvas, paint: Paint, cx: Float, cy: Float, r: Float, ritual: Float, customColor: Int?) {
-        val wingSpread = ritual * r * 0.4f
-        canvas.drawCircle(cx - wingSpread, cy, r * 0.8f, paint)
-        canvas.drawCircle(cx + wingSpread, cy, r * 0.8f, paint)
-        val headPaint = Paint(paint).apply { color = Color.BLACK }
-        canvas.drawCircle(cx, cy - r * 0.75f, r * 0.35f, headPaint)
-        val spotPaint = Paint(paint).apply { color = Color.BLACK }
-        canvas.drawCircle(cx - wingSpread - r * 0.25f, cy - r * 0.1f, r * 0.14f, spotPaint)
-        canvas.drawCircle(cx + wingSpread + r * 0.25f, cy + r * 0.2f, r * 0.14f, spotPaint)
-        canvas.drawLine(cx - wingSpread, cy - r * 0.75f, cx + wingSpread, cy - r * 0.75f, headPaint.apply { strokeWidth = r * 0.06f })
+    private fun drawCrown(canvas: Canvas, paint: Paint, cx: Float, cy: Float, r: Float, ritual: Float, customColor: Int?) {
+        val scale = 1f + ritual * 0f
+        paint.color = (customColor ?: Color.parseColor("#FFD166"))
+        val path = Path().apply {
+            moveTo(cx - r * 0.8f * scale, cy + r * 0.6f)
+            lineTo(cx - r * 0.9f, cy - r * 0.5f)
+            lineTo(cx - r * 0.3f, cy)
+            lineTo(cx, cy - r * 0.7f)
+            lineTo(cx + r * 0.3f, cy)
+            lineTo(cx + r * 0.9f, cy - r * 0.5f)
+            lineTo(cx + r * 0.8f, cy + r * 0.6f)
+            close()
+        }
+        canvas.drawPath(path, paint)
+
+        paint.color = Color.parseColor("#EF476F")
+        canvas.drawCircle(cx - r * 0.9f, cy - r * 0.5f, r * 0.12f, paint)
+        canvas.drawCircle(cx, cy - r * 0.7f, r * 0.14f, paint)
+        canvas.drawCircle(cx + r * 0.9f, cy - r * 0.5f, r * 0.12f, paint)
+
+        paint.color = Color.parseColor("#118AB2")
+        canvas.drawRect(RectF(cx - r * 0.85f, cy + r * 0.4f, cx + r * 0.85f, cy + r * 0.65f), paint)
     }
 
     private fun drawLove(canvas: Canvas, paint: Paint, cx: Float, cy: Float, r: Float, ritual: Float, customColor: Int?) {

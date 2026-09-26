@@ -11,6 +11,7 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
+import android.util.AttributeSet
 import android.view.Choreographer
 import android.view.MotionEvent
 import android.view.View
@@ -42,9 +43,13 @@ import kotlin.math.sin
  *    baked into `prevX/Y`, so it flies off with real momentum — no manual
  *    "velocity" bookkeeping needed for the flick.
  */
-class CharmView(context: Context) : View(context) {
+class CharmView @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
+) : View(context, attrs, defStyleAttr) {
 
-    var charm: CharmType = CharmType.CLOVER
+    var charm: CharmType = CharmType.STAR
         set(value) {
             field = value
             invalidate()

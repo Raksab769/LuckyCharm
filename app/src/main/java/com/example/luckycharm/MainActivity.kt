@@ -42,7 +42,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 
 class MainActivity : AppCompatActivity() {
 
-    private var selectedCharm: CharmType = CharmType.CLOVER
+    private var selectedCharm: CharmType = CharmType.STAR
     private var selectedLetter: String? = null
     private var selectedColor: Int? = null
     private var selectedStringColor: Int? = null
