@@ -11,7 +11,7 @@ Canvas-drawn charms: clover, star, horseshoe, moon, ladybird), its own code,
 and no shared assets, icons, or branding from any existing product.
 
 ## How it works
-
+Het there
 - **MainActivity** — requests the `SYSTEM_ALERT_WINDOW` ("Display over other
   apps") permission, lets you pick a charm from a grid, and starts/stops the
   overlay service.
